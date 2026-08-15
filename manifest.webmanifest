@@ -1,0 +1,31 @@
+{
+  "name": "နာဒီကာ နာရီစက်ဝိုင်း",
+  "short_name": "နာဒီကာ",
+  "description": "နာဒီကာ အလိုအလျောက်တွက်ချက်စနစ်",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#06152f",
+  "theme_color": "#06152f",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
