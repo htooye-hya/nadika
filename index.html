@@ -41,6 +41,1110 @@
   #startupSplash{position:fixed;inset:0;z-index:2147483647;background-color:#06152f;background-image:url("assets/splash.png");background-repeat:no-repeat;background-position:center;background-size:cover;opacity:1;transition:opacity .22s ease;overflow:hidden}
   #startupSplash.hide{opacity:0;pointer-events:none}
   @media (orientation:landscape){#startupSplash{background-size:contain}}
+
+
+  /* ===== v17 SPLASH-MATCH COSMIC THEME ===== */
+  :root{
+    --bg:#03142d;--panel:rgba(3,22,49,.90);--panel2:rgba(5,31,65,.94);
+    --line:#d6a63c;--text:#fff3cf;--muted:#d9c18a;--accent:#e0ad3d;
+    --good:#93c47d;--bad:#ef8c7d;
+  }
+  html,body{min-height:100%;background:#03142d;color:var(--text)}
+  body{
+    background-image:
+      linear-gradient(rgba(1,13,31,.70),rgba(1,13,31,.82)),
+      url("assets/splash.png");
+    background-size:cover;
+    background-position:center top;
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+    background:
+      radial-gradient(circle at 18% 10%,rgba(255,218,116,.18),transparent 10%),
+      radial-gradient(circle at 82% 12%,rgba(255,191,52,.16),transparent 11%),
+      radial-gradient(circle at 50% 45%,rgba(17,87,153,.16),transparent 38%);
+  }
+  header{background:rgba(2,18,42,.88);border-bottom:1px solid rgba(222,173,59,.65);box-shadow:0 6px 24px rgba(0,0,0,.24)}
+  .title{color:#f3c75f;text-shadow:0 1px 8px rgba(232,174,50,.22)}
+  .sub{color:#d4bd88}
+  .tabs{background:rgba(2,18,42,.92);border-bottom:1px solid rgba(222,173,59,.45)}
+  .tab{background:rgba(4,28,59,.92);border-color:#b98a2e;color:#f0d99f}
+  .tab.active{background:linear-gradient(180deg,#c89323,#8f6110);color:#fff7dc;border-color:#f1c863;box-shadow:0 0 14px rgba(226,177,59,.22)}
+  main{padding-top:18px}
+  .card{background:linear-gradient(180deg,rgba(3,25,54,.94),rgba(2,18,42,.95));border:1px solid rgba(224,174,61,.72);box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 0 24px rgba(36,86,130,.08)}
+  .field label,.modeNote,.locationStatus,.row .meta,.calendarExportNote{color:#d8c28f}
+  .field input,.field select{background:#071e3c;color:#fff3cf;border-color:#b98a2e}
+  .locBtn{background:#092448;color:#f6dc9a;border-color:#c39431}
+
+  /* Clock like the supplied splash artwork */
+  .clockWrap{padding-top:34px}
+  .clockStage::before{content:"☾";position:absolute;left:2%;top:0;font-size:46px;color:#f6cf75;text-shadow:0 0 18px rgba(255,205,91,.65);z-index:0}
+  .clockStage::after{content:"☀";position:absolute;right:2%;top:2px;font-size:43px;color:#eab24a;text-shadow:0 0 18px rgba(255,188,54,.55);z-index:0}
+  .clock{
+    border:3px solid #e6bd58;
+    background:
+      radial-gradient(circle at center,#fff4d2 0 14%,#f8e8bd 15% 58%,#f3db9f 59% 61%,#061a37 62% 100%);
+    box-shadow:
+      0 0 0 3px #7a4f08,
+      0 0 0 6px #efca6a,
+      0 0 0 10px #061a37,
+      0 0 0 13px #e3b84e,
+      0 0 38px rgba(230,181,60,.38),
+      inset 0 0 34px rgba(128,83,8,.12);
+  }
+  .clock::before{
+    content:"✧   ◇   ✦   ◇   ✧";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:48%;height:48%;border:1px solid rgba(184,135,22,.38);border-radius:50%;display:grid;place-items:center;
+    color:rgba(168,113,20,.42);font-size:18px;letter-spacing:9px;z-index:0;
+    box-shadow:inset 0 0 0 12px rgba(208,164,72,.03),0 0 0 1px rgba(208,164,72,.12);
+  }
+  .clock::after{
+    content:"";position:absolute;left:50%;top:50%;width:34%;height:34%;transform:translate(-50%,-50%) rotate(45deg);
+    border:1px solid rgba(180,129,24,.30);border-radius:28% 52% 28% 52%;z-index:0;
+  }
+  .nadiRing.inner{border:3px solid #e1b44a;box-shadow:0 0 0 2px #7b520d}
+  .nadiRing.outer{border:3px solid #edc865;box-shadow:0 0 0 3px #061a37,0 0 0 5px #a87313,0 0 24px rgba(223,174,58,.25)}
+  .nadiLabel span{color:#f1c85e;text-shadow:0 1px 2px #000;font-weight:900}
+  .nadiLabel.current span{color:#fff1a8;text-shadow:0 0 8px rgba(255,209,84,.85),0 1px 2px #000}
+  .tick span{color:#694510;font-size:13px;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+  .hourHand{background:#071b37;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .minuteHand{background:#b97b12;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .secondHand{background:#8b2d24}
+  .center{background:#e5b94d;border-color:#80520b;box-shadow:0 0 0 2px #f6dc8e}
+  .nadiRunner{background:rgba(205,205,205,.10);border-color:rgba(219,219,219,.65);box-shadow:0 0 8px rgba(255,255,255,.12)}
+
+  .liveClock .time{color:#f2c65d;text-shadow:0 2px 10px rgba(0,0,0,.45)}
+  .liveClock .date{color:#eadba9}
+  #remainingTime{color:#f0c65c!important}
+
+  .result{position:relative;overflow:hidden}
+  .result::before{content:"✦";position:absolute;right:18px;top:10px;color:rgba(229,181,66,.38);font-size:34px}
+  .result h2{color:#f0c75f}
+  .badge{background:#092448;border-color:#b98a2e;color:#f6dea2}
+  .effect{background:linear-gradient(180deg,rgba(7,31,61,.94),rgba(4,22,47,.96));border-color:#c69732;color:#fff0c7;box-shadow:inset 0 0 24px rgba(224,174,61,.05)}
+  .effect::before{content:"အကျိုးပေး";display:block;color:#f0c75f;font-size:12px;font-weight:900;letter-spacing:.3px;margin-bottom:6px}
+  .planet{color:#ffd66f}
+  .row{background:rgba(4,25,53,.93);border-color:rgba(206,158,53,.62);color:#fff0c7}
+  .row.current{outline:2px solid #e2b341;background:linear-gradient(180deg,rgba(24,56,89,.96),rgba(9,35,66,.96))}
+  .row .ef{color:#f4e4ba}
+  .sectionTitle,.weekDay{color:#f1c960}
+  .calendarExportBtn{background:linear-gradient(180deg,#d1a132,#8d5c0c);border-color:#f0c865;color:#fff7de}
+
+  @media(max-width:760px){
+    body{background-attachment:scroll;background-position:center top}
+    .clockStage::before{left:-2%;font-size:34px}.clockStage::after{right:-2%;font-size:32px}
+    .clock{width:min(72vw,390px);margin:52px}
+  }
+
+
+  /* ===== v18 SINGLE-RING SPLASH CLOCK =====
+     Match the supplied splash artwork: one cream clock face + one navy Nadika ring.
+     Remove the extra concentric visual layers from v17 while preserving all functions. */
+
+  .clockWrap{padding-top:34px}
+
+  .clock{
+    width:min(80vw,480px);
+    margin:58px;
+    border:3px solid #e7bd55;
+    background:
+      radial-gradient(circle at 50% 45%,
+        #fff8df 0%,
+        #fdf1cf 42%,
+        #f7e3af 72%,
+        #f2d690 100%);
+    box-shadow:
+      0 0 0 2px #7b510b,
+      0 0 18px rgba(232,184,66,.24),
+      inset 0 0 24px rgba(118,78,12,.08);
+  }
+
+  /* Keep just one subtle central ornament; remove the extra concentric geometry. */
+  .clock::before{
+    content:"✦";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:38%;
+    height:38%;
+    border:1px solid rgba(174,120,25,.20);
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:rgba(172,116,20,.20);
+    font-size:30px;
+    letter-spacing:0;
+    box-shadow:none;
+    z-index:0;
+  }
+  .clock::after{content:none!important;display:none!important}
+
+  /* Invisible inner measuring ring: the visible inner boundary is the clock's own gold border. */
+  .nadiRing.inner{
+    width:calc(100% + 6px);
+    height:calc(100% + 6px);
+    border:0!important;
+    box-shadow:none!important;
+    background:transparent!important;
+  }
+
+  /* One navy Nadika annulus with gold outer edge and 30 radial separators. */
+  .nadiRing.outer{
+    width:calc(100% + 94px);
+    height:calc(100% + 94px);
+    border:3px solid #e7bd55!important;
+    box-shadow:
+      0 0 0 2px #7b510b,
+      0 0 20px rgba(228,177,54,.22)!important;
+    background:
+      repeating-conic-gradient(
+        from -90deg,
+        rgba(231,189,85,.88) 0deg 0.45deg,
+        transparent 0.45deg 12deg
+      ),
+      #071b3a;
+    -webkit-mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 45px),
+        #000 calc(100% - 45px) 100%);
+    mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 45px),
+        #000 calc(100% - 45px) 100%);
+  }
+
+  .nadiLabel{z-index:3}
+  .nadiLabel span{
+    color:#f5cf6a!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    text-shadow:0 1px 2px rgba(0,0,0,.75)!important;
+  }
+  .nadiLabel.current span{
+    color:#fff1b4!important;
+    font-size:12px!important;
+    text-shadow:0 0 7px rgba(255,213,100,.55),0 1px 2px #000!important;
+  }
+
+  .tick span{
+    color:#6b4511!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    text-shadow:0 1px 0 rgba(255,255,255,.55)!important;
+  }
+
+  .hourHand{
+    background:#071b3a!important;
+    width:5px;
+    height:30%;
+    box-shadow:0 1px 3px rgba(0,0,0,.28);
+  }
+  .minuteHand{
+    background:#b87916!important;
+    width:3px;
+    height:38%;
+  }
+  .secondHand{
+    background:#8d352a!important;
+    height:40%;
+  }
+  .center{
+    width:18px;
+    height:18px;
+    background:#d8a52d!important;
+    border:3px solid #70480a!important;
+    box-shadow:0 0 0 2px #f2d36f;
+  }
+
+  /* The live Nadika marker stays centered inside the single navy band. */
+  .nadiRunner{
+    background:rgba(170,170,170,.12)!important;
+    border:2px solid rgba(190,190,190,.72)!important;
+    box-shadow:0 0 0 1px rgba(0,0,0,.18),0 0 7px rgba(255,255,255,.08)!important;
+  }
+
+  @media(max-width:760px){
+    .clock{
+      width:min(72vw,390px);
+      margin:52px;
+    }
+    .nadiLabel span{font-size:10px!important}
+    .nadiLabel.current span{font-size:11px!important}
+    .tick span{font-size:13px!important}
+  }
+
+
+/* ===== v19 CLOCK MATCHED TO USER REFERENCE ===== */
+.clockStage{
+  filter: drop-shadow(0 9px 20px rgba(0,0,0,.32));
+}
+
+/* One ivory clock face with a strong polished gold bezel. */
+.clock{
+  width:min(78vw,470px)!important;
+  margin:68px!important;
+  border:4px solid #d9a936!important;
+  background:
+    radial-gradient(circle at 46% 38%,
+      #fffdf4 0%,
+      #fff7df 39%,
+      #f8e9bd 75%,
+      #efd190 100%)!important;
+  box-shadow:
+    0 0 0 2px #fff0b1,
+    0 0 0 5px #8c5b0c,
+    0 0 0 7px #e9bf55,
+    inset 0 0 28px rgba(115,70,8,.10),
+    0 0 26px rgba(234,183,63,.25)!important;
+}
+
+/* Hide the generic pseudo ornament; v19 uses the inline SVG mandala. */
+.clock::before,.clock::after{display:none!important;content:none!important}
+
+/* Invisible helper ring at the clock-bezel edge. */
+.nadiRing.inner{
+  width:calc(100% + 16px)!important;
+  height:calc(100% + 16px)!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+/* Thick single navy Nadika band with 30 gold radial separators. */
+.nadiRing.outer{
+  width:calc(100% + 116px)!important;
+  height:calc(100% + 116px)!important;
+  border:4px solid #e9c35e!important;
+  background:
+    repeating-conic-gradient(
+      from -90deg,
+      rgba(239,197,85,.98) 0deg 0.55deg,
+      transparent 0.55deg 12deg
+    ),
+    #071b3d!important;
+  -webkit-mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 54px),
+      #000 calc(100% - 54px) 100%)!important;
+  mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 54px),
+      #000 calc(100% - 54px) 100%)!important;
+  box-shadow:
+    0 0 0 2px #6c4408,
+    0 0 0 5px #edc96a,
+    0 0 0 7px #7c4e08,
+    0 0 24px rgba(243,196,76,.26)!important;
+}
+
+/* 30 Nadika numerals, large and centered in the navy band. */
+.nadiLabel{z-index:6!important}
+.nadiLabel span{
+  min-width:26px!important;
+  height:26px!important;
+  padding:0!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:17px!important;
+  line-height:1!important;
+  font-weight:700!important;
+  color:#f4d477!important;
+  text-shadow:
+    0 1px 0 #57370a,
+    0 0 5px rgba(255,224,139,.20)!important;
+}
+.nadiLabel.current span{
+  color:#fff4b8!important;
+  font-size:18px!important;
+  text-shadow:
+    0 0 7px rgba(255,225,125,.75),
+    0 1px 1px #493006!important;
+}
+
+/* Classic serif 1–12 numerals like the supplied clock. */
+.tick{z-index:4!important}
+.tick span{
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:25px!important;
+  font-weight:500!important;
+  color:#956416!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.7)!important;
+}
+
+/* Gold floral clock-center ornament. */
+.clockMandala{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:45%;
+  height:45%;
+  transform:translate(-50%,-50%);
+  color:rgba(189,132,34,.52);
+  z-index:1;
+  pointer-events:none;
+}
+
+/* Reference-like hands. */
+.hourHand{
+  z-index:5!important;
+  width:7px!important;
+  height:28%!important;
+  border-radius:5px!important;
+  background:linear-gradient(90deg,#06162f,#0b2a50,#071b35)!important;
+  box-shadow:0 2px 4px rgba(0,0,0,.34)!important;
+}
+.minuteHand{
+  z-index:5!important;
+  width:4px!important;
+  height:38%!important;
+  border-radius:4px!important;
+  background:linear-gradient(90deg,#8f5a0b,#e4b43e,#9d640d)!important;
+  box-shadow:0 1px 3px rgba(0,0,0,.22)!important;
+}
+.secondHand{
+  z-index:5!important;
+  width:1px!important;
+  height:40%!important;
+  background:#9b4b36!important;
+  opacity:.80!important;
+}
+.center{
+  z-index:8!important;
+  width:21px!important;
+  height:21px!important;
+  background:radial-gradient(circle at 35% 30%,#ffe79a 0%,#d69d26 48%,#8e5b0b 100%)!important;
+  border:3px solid #6f4508!important;
+  box-shadow:0 0 0 2px #f4d06d,0 2px 5px rgba(0,0,0,.28)!important;
+}
+
+/* Transparent moving marker centered within the navy band. */
+.nadiRunner{
+  z-index:9!important;
+  background:rgba(163,163,163,.12)!important;
+  border:3px solid rgba(224,224,224,.88)!important;
+  box-shadow:
+    0 0 0 1px rgba(91,91,91,.55),
+    0 0 7px rgba(255,255,255,.22)!important;
+  backdrop-filter:none!important;
+}
+
+/* Keep sun/moon decorations but make them closer to the reference icon. */
+.clockStage::before{
+  content:"☾"!important;
+  display:block!important;
+  left:-5%!important;
+  top:-3%!important;
+  font-size:52px!important;
+  color:#f5d27a!important;
+  text-shadow:0 0 16px rgba(255,214,115,.60)!important;
+}
+.clockStage::after{
+  content:"☀"!important;
+  display:block!important;
+  right:-5%!important;
+  top:-2%!important;
+  font-size:50px!important;
+  color:#e6ad34!important;
+  text-shadow:0 0 16px rgba(255,185,49,.50)!important;
+}
+
+@media(max-width:760px){
+  .clock{
+    width:min(70vw,380px)!important;
+    margin:58px!important;
+  }
+  .nadiRing.outer{
+    width:calc(100% + 100px)!important;
+    height:calc(100% + 100px)!important;
+    -webkit-mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 47px),
+        #000 calc(100% - 47px) 100%)!important;
+    mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 47px),
+        #000 calc(100% - 47px) 100%)!important;
+  }
+  .nadiLabel span{
+    font-size:13px!important;
+    min-width:22px!important;
+    height:22px!important;
+  }
+  .nadiLabel.current span{font-size:14px!important}
+  .tick span{font-size:19px!important}
+  .clockStage::before{font-size:36px!important;left:-2%!important}
+  .clockStage::after{font-size:34px!important;right:-2%!important}
+}
+
+
+/* =========================================================
+   v20 — CLOCK + BACKGROUND MATCHED TO REFERENCE IMAGE
+   ========================================================= */
+
+/* Deep midnight blue space background with layered stars */
+body{
+  background:
+    radial-gradient(circle at 8% 16%, rgba(255,215,103,.95) 0 1px, transparent 2px),
+    radial-gradient(circle at 16% 31%, rgba(255,226,143,.78) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 26% 12%, rgba(255,213,85,.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 23%, rgba(255,236,175,.92) 0 1.4px, transparent 2.5px),
+    radial-gradient(circle at 48% 8%, rgba(255,207,72,.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 59% 20%, rgba(255,233,157,.88) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 11%, rgba(255,211,79,.82) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 82% 26%, rgba(255,236,183,.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 93% 13%, rgba(255,202,53,.82) 0 1.5px, transparent 2.5px),
+
+    radial-gradient(circle at 13% 48%, rgba(255,226,139,.78) 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 61%, rgba(255,206,66,.72) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 39% 49%, rgba(255,233,163,.82) 0 1px, transparent 2px),
+    radial-gradient(circle at 53% 64%, rgba(255,215,93,.83) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 66% 47%, rgba(255,237,181,.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 61%, rgba(255,209,70,.80) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 91% 46%, rgba(255,233,158,.88) 0 1px, transparent 2px),
+
+    radial-gradient(circle at 9% 82%, rgba(255,215,88,.78) 0 1px, transparent 2px),
+    radial-gradient(circle at 21% 74%, rgba(255,235,170,.72) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 36% 88%, rgba(255,206,62,.78) 0 1px, transparent 2px),
+    radial-gradient(circle at 52% 79%, rgba(255,230,144,.8) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 69% 89%, rgba(255,212,77,.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 77%, rgba(255,235,174,.82) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 95% 90%, rgba(255,205,56,.8) 0 1px, transparent 2px),
+
+    radial-gradient(ellipse at 50% 42%, rgba(21,76,134,.22) 0%, transparent 46%),
+    linear-gradient(180deg,#010b1b 0%,#03172f 44%,#011329 100%) !important;
+  background-attachment: fixed !important;
+  color:#f7d978 !important;
+}
+
+/* Gold framed app shell like the reference */
+.app{
+  background:transparent !important;
+  position:relative;
+}
+.app::before{
+  content:"";
+  position:fixed;
+  inset:10px;
+  border:1.5px solid rgba(224,174,62,.88);
+  border-radius:20px;
+  pointer-events:none;
+  z-index:1000;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,232,155,.18),
+    0 0 22px rgba(221,167,46,.06);
+}
+
+/* Decorative star field concentrated around clock area */
+.clockWrap{
+  position:relative;
+  background:
+    radial-gradient(circle at 7% 18%, rgba(248,192,55,.95) 0 2px, transparent 3px),
+    radial-gradient(circle at 13% 34%, rgba(255,221,126,.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 20% 9%, rgba(248,194,57,.95) 0 1.7px, transparent 3px),
+    radial-gradient(circle at 27% 27%, rgba(255,230,153,.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 36% 10%, rgba(250,201,67,.95) 0 2px, transparent 3px),
+    radial-gradient(circle at 47% 24%, rgba(255,236,175,.92) 0 1px, transparent 2px),
+    radial-gradient(circle at 58% 8%, rgba(246,188,44,.92) 0 1.8px, transparent 3px),
+    radial-gradient(circle at 69% 26%, rgba(255,225,135,.82) 0 1px, transparent 2px),
+    radial-gradient(circle at 79% 11%, rgba(249,197,58,.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 90% 31%, rgba(255,235,168,.88) 0 1px, transparent 2px),
+
+    radial-gradient(circle at 8% 71%, rgba(255,214,104,.82) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 17% 83%, rgba(248,194,54,.86) 0 1px, transparent 2px),
+    radial-gradient(circle at 31% 69%, rgba(255,234,167,.78) 0 1px, transparent 2px),
+    radial-gradient(circle at 43% 88%, rgba(249,198,60,.82) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 74%, rgba(255,230,148,.78) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 87%, rgba(248,191,48,.85) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 84% 72%, rgba(255,232,156,.82) 0 1px, transparent 2px),
+    radial-gradient(circle at 94% 86%, rgba(249,196,56,.9) 0 1.5px, transparent 2.5px),
+    transparent !important;
+}
+
+/* Add larger golden starbursts around the outside of the clock */
+.clockStage{
+  position:relative;
+  isolation:isolate;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.42)) !important;
+}
+.clockStage .starHalo{
+  display:none;
+}
+.clockStage::before,
+.clockStage::after{
+  z-index:20 !important;
+}
+
+/* moon and sun — reference-like */
+.clockStage::before{
+  content:"☾" !important;
+  position:absolute !important;
+  left:-11% !important;
+  top:0% !important;
+  display:block !important;
+  font-size:64px !important;
+  line-height:1 !important;
+  color:#f7d275 !important;
+  text-shadow:
+    0 0 5px rgba(255,235,180,.9),
+    0 0 18px rgba(244,187,53,.5) !important;
+}
+.clockStage::after{
+  content:"☀" !important;
+  position:absolute !important;
+  right:-11% !important;
+  top:0% !important;
+  display:block !important;
+  font-size:62px !important;
+  line-height:1 !important;
+  color:#e8ad2e !important;
+  text-shadow:
+    0 0 5px rgba(255,231,155,.9),
+    0 0 18px rgba(245,176,38,.45) !important;
+}
+
+/* cream clock face */
+.clock{
+  width:min(76vw,470px) !important;
+  margin:82px !important;
+  border:4px solid #d7a337 !important;
+  background:
+    radial-gradient(circle at 46% 39%, #fffefa 0%, #fff8e8 42%, #f7e6ba 79%, #edcf8e 100%) !important;
+  box-shadow:
+    0 0 0 2px #fff0b4,
+    0 0 0 6px #95620d,
+    0 0 0 9px #e9bd55,
+    inset 0 0 26px rgba(117,72,5,.10),
+    0 0 25px rgba(235,183,56,.28) !important;
+}
+
+/* central floral ornament */
+.clockMandala{
+  width:48% !important;
+  height:48% !important;
+  color:rgba(190,132,31,.48) !important;
+  filter:drop-shadow(0 0 1px rgba(184,123,19,.18));
+}
+
+/* NAVY NADIKA BAND — single band like reference */
+.nadiRing.outer{
+  width:calc(100% + 128px) !important;
+  height:calc(100% + 128px) !important;
+  border:0 !important;
+  background:
+    repeating-conic-gradient(
+      from -90deg,
+      rgba(235,188,77,.92) 0deg 0.72deg,
+      transparent 0.72deg 12deg
+    ),
+    #061a3a !important;
+  -webkit-mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 58px),
+      #000 calc(100% - 58px) 100%) !important;
+  mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 58px),
+      #000 calc(100% - 58px) 100%) !important;
+
+  /* thick polished gold ring OUTSIDE the numerals */
+  box-shadow:
+    0 0 0 2px #3f2704,
+    0 0 0 6px #bd7e18,
+    0 0 0 10px #f1c45e,
+    0 0 0 13px #8a590e,
+    0 0 0 17px #e0aa35,
+    0 0 0 20px #ffe189,
+    0 0 0 23px #98620e,
+    0 0 28px rgba(234,179,48,.36) !important;
+}
+
+/* inner separator edge around the numerals */
+.nadiRing.inner{
+  width:calc(100% + 17px) !important;
+  height:calc(100% + 17px) !important;
+  border:3px solid #d9a53a !important;
+  box-shadow:
+    0 0 0 2px #7a4d08,
+    0 0 0 4px #efca69 !important;
+  background:transparent !important;
+}
+
+/* large gold 1–30 numerals */
+.nadiLabel span{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:18px !important;
+  min-width:28px !important;
+  height:28px !important;
+  font-weight:700 !important;
+  color:#f4d273 !important;
+  text-shadow:
+    0 1px 0 #4e3005,
+    0 0 3px rgba(255,228,142,.22) !important;
+}
+.nadiLabel.current span{
+  color:#fff0af !important;
+  font-size:19px !important;
+  text-shadow:
+    0 0 7px rgba(255,226,129,.75),
+    0 1px 1px #4c2e04 !important;
+}
+
+/* classic 1–12 clock numerals */
+.tick span{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:26px !important;
+  color:#8a5d17 !important;
+  font-weight:500 !important;
+  text-shadow:0 1px 0 rgba(255,255,255,.75) !important;
+}
+
+/* hands */
+.hourHand{
+  width:7px !important;
+  height:29% !important;
+  border-radius:6px !important;
+  background:linear-gradient(90deg,#07172f 0%,#0b294e 52%,#06182f 100%) !important;
+  box-shadow:0 2px 4px rgba(0,0,0,.36) !important;
+}
+.minuteHand{
+  width:4px !important;
+  height:38% !important;
+  border-radius:4px !important;
+  background:linear-gradient(90deg,#8d590c 0%,#e4b33e 50%,#945d0b 100%) !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.24) !important;
+}
+.secondHand{
+  width:1px !important;
+  height:40% !important;
+  background:#8f392f !important;
+  opacity:.78 !important;
+}
+.center{
+  width:21px !important;
+  height:21px !important;
+  background:
+    radial-gradient(circle at 36% 30%,#ffe7a0 0%,#dda52e 47%,#89570b 100%) !important;
+  border:3px solid #704708 !important;
+  box-shadow:
+    0 0 0 2px #f3ce69,
+    0 2px 5px rgba(0,0,0,.28) !important;
+}
+
+/* transparent Nadika marker */
+.nadiRunner{
+  background:rgba(155,155,155,.10) !important;
+  border:3px solid rgba(225,225,225,.90) !important;
+  box-shadow:
+    0 0 0 1px rgba(79,79,79,.55),
+    0 0 8px rgba(255,255,255,.18) !important;
+}
+
+/* extra starbursts around outer clock area */
+.clockWrap::before{
+  content:"✦   ✧      ✦    ✦        ✧   ✦";
+  position:absolute;
+  left:50%;
+  top:20px;
+  transform:translateX(-50%);
+  width:92%;
+  white-space:pre;
+  text-align:center;
+  font-size:24px;
+  letter-spacing:34px;
+  color:#efbc49;
+  text-shadow:0 0 8px rgba(245,189,61,.45);
+  pointer-events:none;
+}
+.clockWrap::after{
+  content:"✧       ✦    ✧      ✦      ✧";
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+  width:92%;
+  text-align:center;
+  font-size:21px;
+  letter-spacing:31px;
+  color:#e4ad36;
+  text-shadow:0 0 7px rgba(235,171,41,.38);
+  pointer-events:none;
+}
+
+/* dark translucent cards/buttons so they sit on the reference background */
+.card,
+.panel,
+.controls,
+.nav,
+.tabs,
+.dayCard,
+.infoCard,
+.result,
+.weekCard{
+  background:linear-gradient(180deg,rgba(4,27,56,.94),rgba(2,20,43,.94)) !important;
+  border-color:rgba(207,155,45,.75) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.18) !important;
+}
+button,.btn,select,input{
+  border-color:rgba(210,159,48,.76) !important;
+}
+
+/* mobile proportions */
+@media(max-width:760px){
+  .app::before{inset:5px;border-radius:14px}
+  .clock{
+    width:min(67vw,370px) !important;
+    margin:70px !important;
+  }
+  .nadiRing.outer{
+    width:calc(100% + 112px) !important;
+    height:calc(100% + 112px) !important;
+    -webkit-mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 51px),
+        #000 calc(100% - 51px) 100%) !important;
+    mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 51px),
+        #000 calc(100% - 51px) 100%) !important;
+    box-shadow:
+      0 0 0 2px #3f2704,
+      0 0 0 5px #bd7e18,
+      0 0 0 8px #f1c45e,
+      0 0 0 11px #8a590e,
+      0 0 0 14px #e0aa35,
+      0 0 0 17px #ffe189,
+      0 0 0 20px #98620e,
+      0 0 24px rgba(234,179,48,.32) !important;
+  }
+  .nadiLabel span{
+    font-size:13px !important;
+    min-width:21px !important;
+    height:21px !important;
+  }
+  .nadiLabel.current span{font-size:14px !important}
+  .tick span{font-size:19px !important}
+  .clockStage::before{
+    left:-6% !important;
+    top:0 !important;
+    font-size:42px !important;
+  }
+  .clockStage::after{
+    right:-6% !important;
+    top:0 !important;
+    font-size:40px !important;
+  }
+  .clockWrap::before,.clockWrap::after{
+    font-size:14px;
+    letter-spacing:13px;
+  }
+}
+
+
+/* =========================================================
+   v21 — GOLD NADIKA MARKER + THICK GOLD NUMBER RING
+   Remove decorative stars near the remaining-time area.
+   ========================================================= */
+
+/* Gold moving marker; transparent center keeps the number readable. */
+.nadiRunner{
+  background:rgba(224,171,43,.16) !important;
+  border:3px solid #e2ad32 !important;
+  box-shadow:
+    0 0 0 1px #7c500c,
+    0 0 7px rgba(241,194,78,.65) !important;
+}
+
+/* Strong polished gold boundaries directly surrounding the 1–30 number band. */
+.nadiRing.outer{
+  box-shadow:
+    0 0 0 3px #5f3a06,
+    0 0 0 8px #bf811b,
+    0 0 0 13px #f2cb6b,
+    0 0 0 17px #8b580c,
+    0 0 0 22px #dca42d,
+    0 0 0 27px #ffe393,
+    0 0 0 31px #82500a,
+    0 0 30px rgba(234,179,48,.34) !important;
+}
+
+/* Thicker inner gold circle immediately inside the 1–30 numerals. */
+.nadiRing.inner{
+  border:5px solid #d9a337 !important;
+  box-shadow:
+    0 0 0 2px #6e4407,
+    0 0 0 5px #f0ca67,
+    0 0 0 7px #8b590d !important;
+}
+
+/* Remove decorative star strings that were appearing above/below the clock,
+   including near the remaining-time readout. */
+.clockWrap::before,
+.clockWrap::after{
+  content:none !important;
+  display:none !important;
+}
+
+/* Keep the remaining-time area visually clean. */
+.liveRemain,
+.remaining,
+.remainingTime,
+#remainingTime,
+#remainTime,
+.countdown,
+.countdownBox{
+  background-image:none !important;
+  text-shadow:none !important;
+}
+.liveRemain::before,
+.liveRemain::after,
+.remaining::before,
+.remaining::after,
+.remainingTime::before,
+.remainingTime::after,
+#remainingTime::before,
+#remainingTime::after,
+#remainTime::before,
+#remainTime::after,
+.countdown::before,
+.countdown::after,
+.countdownBox::before,
+.countdownBox::after{
+  content:none !important;
+  display:none !important;
+}
+
+@media(max-width:760px){
+  .nadiRing.outer{
+    box-shadow:
+      0 0 0 2px #5f3a06,
+      0 0 0 6px #bf811b,
+      0 0 0 10px #f2cb6b,
+      0 0 0 13px #8b580c,
+      0 0 0 17px #dca42d,
+      0 0 0 21px #ffe393,
+      0 0 0 24px #82500a,
+      0 0 24px rgba(234,179,48,.30) !important;
+  }
+  .nadiRing.inner{
+    border-width:4px !important;
+  }
+}
+
+
+/* =========================================================
+   v22 — OUTER RING FIX
+   Thick gold ring ONLY outside the 1–30 Nadika numerals.
+   No thick ring on the inside of the numeral band.
+   ========================================================= */
+
+/* Remove the thick inner ring that was incorrectly placed inside the numbers. */
+.nadiRing.inner{
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+
+/* Keep the navy Nadika band unchanged, then place ONE thick gold ring
+   strictly outside its outer edge. */
+.nadiRing.outer{
+  border:10px solid #e8b743 !important;
+  box-shadow:
+    0 0 0 2px #6d4307,
+    0 0 0 4px #f7d77d,
+    0 0 0 7px #8b570b,
+    0 0 18px rgba(232,183,67,.34) !important;
+}
+
+/* Do not alter the Nadika number positions. */
+.nadiLabel{
+  z-index:6 !important;
+}
+
+/* Gold moving marker remains transparent enough to read the number below. */
+.nadiRunner{
+  background:rgba(224,171,43,.14) !important;
+  border:3px solid #e2ad32 !important;
+  box-shadow:
+    0 0 0 1px #7c500c,
+    0 0 7px rgba(241,194,78,.60) !important;
+}
+
+@media(max-width:760px){
+  .nadiRing.outer{
+    border-width:8px !important;
+    box-shadow:
+      0 0 0 2px #6d4307,
+      0 0 0 3px #f7d77d,
+      0 0 0 5px #8b570b,
+      0 0 14px rgba(232,183,67,.30) !important;
+  }
+}
+
+
+/* =========================================================
+   v23 — TRUE OUTER RING OF THE 1–30 NUMERALS
+   ========================================================= */
+
+/* Restore the Nadika band itself to a clean navy band.
+   This is NOT the thick outer ring. */
+.nadiRing.inner{
+  width:calc(100% + 18px) !important;
+  height:calc(100% + 18px) !important;
+  border:3px solid #d6a235 !important;
+  box-shadow:0 0 0 2px #714507 !important;
+  background:transparent !important;
+}
+
+.nadiRing.outer{
+  width:calc(100% + 116px) !important;
+  height:calc(100% + 116px) !important;
+  border:2px solid #b97c17 !important;
+  box-shadow:none !important;
+  background:
+    repeating-conic-gradient(
+      from -90deg,
+      rgba(235,188,77,.94) 0deg 0.55deg,
+      transparent 0.55deg 12deg
+    ),
+    #061a3a !important;
+  -webkit-mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 50px),
+      #000 calc(100% - 50px) 100%) !important;
+  mask:
+    radial-gradient(circle,
+      transparent 0 calc(100% - 50px),
+      #000 calc(100% - 50px) 100%) !important;
+}
+
+/* THIS is the requested ring:
+   one thick gold circle immediately OUTSIDE the 1–30 numerals. */
+.numberOuterRing{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:calc(100% + 104px);
+  height:calc(100% + 104px);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:8px solid #e2ad36;
+  box-sizing:border-box;
+  pointer-events:none;
+  z-index:5;
+  box-shadow:
+    0 0 0 2px #6d4307,
+    0 0 0 4px #f5d170,
+    0 0 0 6px #8a560b,
+    0 0 14px rgba(225,171,52,.28);
+}
+
+/* Numerals stay inside this ring. */
+.nadiLabel{
+  z-index:7 !important;
+}
+
+/* Gold moving marker stays on the numeral path. */
+.nadiRunner{
+  z-index:9 !important;
+  background:rgba(224,171,43,.14) !important;
+  border:3px solid #e2ad32 !important;
+  box-shadow:
+    0 0 0 1px #7c500c,
+    0 0 7px rgba(241,194,78,.60) !important;
+}
+
+@media(max-width:760px){
+  .numberOuterRing{
+    width:calc(100% + 92px);
+    height:calc(100% + 92px);
+    border-width:7px;
+    box-shadow:
+      0 0 0 2px #6d4307,
+      0 0 0 3px #f5d170,
+      0 0 0 5px #8a560b,
+      0 0 12px rgba(225,171,52,.25);
+  }
+  .nadiRing.outer{
+    width:calc(100% + 104px) !important;
+    height:calc(100% + 104px) !important;
+    -webkit-mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 45px),
+        #000 calc(100% - 45px) 100%) !important;
+    mask:
+      radial-gradient(circle,
+        transparent 0 calc(100% - 45px),
+        #000 calc(100% - 45px) 100%) !important;
+  }
+}
+
+
+/* v24 — widen outer ring and center 1–30 numerals between inner and outer rings */
+.nadiRing.inner{
+  width:calc(100% + 20px) !important;
+  height:calc(100% + 20px) !important;
+  border:3px solid #d6a235 !important;
+  box-shadow:0 0 0 2px #714507,0 0 0 4px #efc763 !important;
+  background:transparent !important;
+}
+.nadiRing.outer{
+  width:calc(100% + 144px) !important;
+  height:calc(100% + 144px) !important;
+  border:0 !important;
+  background:
+    repeating-conic-gradient(from -90deg,rgba(235,188,77,.94) 0deg .55deg,transparent .55deg 12deg),
+    #061a3a !important;
+  -webkit-mask:radial-gradient(circle,transparent 0 calc(100% - 62px),#000 calc(100% - 62px) 100%) !important;
+  mask:radial-gradient(circle,transparent 0 calc(100% - 62px),#000 calc(100% - 62px) 100%) !important;
+  box-shadow:none !important;
+}
+.numberOuterRing{
+  width:calc(100% + 142px) !important;
+  height:calc(100% + 142px) !important;
+  border:8px solid #e2ad36 !important;
+  box-shadow:0 0 0 2px #6d4307,0 0 0 4px #f5d170,0 0 0 6px #8a560b,0 0 14px rgba(225,171,52,.28) !important;
+}
+.nadiLabel span{background:transparent !important}
+.nadiRunner{
+  background:rgba(224,171,43,.12) !important;
+  border:3px solid #e2ad32 !important;
+  box-shadow:0 0 0 1px #7c500c,0 0 7px rgba(241,194,78,.60) !important;
+}
+@media(max-width:760px){
+  .nadiRing.outer{
+    width:calc(100% + 126px) !important;
+    height:calc(100% + 126px) !important;
+    -webkit-mask:radial-gradient(circle,transparent 0 calc(100% - 54px),#000 calc(100% - 54px) 100%) !important;
+    mask:radial-gradient(circle,transparent 0 calc(100% - 54px),#000 calc(100% - 54px) 100%) !important;
+  }
+  .numberOuterRing{
+    width:calc(100% + 124px) !important;
+    height:calc(100% + 124px) !important;
+    border-width:7px !important;
+  }
+}
+
+
+/* =========================================================
+   v27 — MOBILE OVERFLOW FIX v2 (final override, wins the cascade)
+   Guarantees the clock + all decorative rings never exceed the
+   device's actual screen width on ANY phone size, WHILE keeping
+   margin comfortably larger than the ring's own bleed (~63px on
+   phones, ~72px on tablets/desktop) so the ring never overlaps
+   the live-time text sitting below the clock.
+   ========================================================= */
+html,body{overflow-x:hidden !important}
+.clock{
+  width:min(76vw,470px,calc(100vw - 228px)) !important;
+  margin:88px auto !important;
+}
+@media(max-width:760px){
+  .clock{
+    width:min(67vw,370px,calc(100vw - 196px)) !important;
+    margin:78px auto !important;
+  }
+}
 </style>
 
 <meta name="theme-color" content="#06152f" />
@@ -55,12 +1159,35 @@
 </head>
 <body class="booting">
 <div id="startupSplash" aria-label="App splash"></div>
-<header><div class="top"><div><div class="title">နာဒီကာ နာရီစက်ဝိုင်း</div><div class="sub">မနက် ၆ ည ၆ တွက်ချက်မှု နှင့် နေထွက် နေဝင်တွက်ချက်မှု</div></div><div class="sub">နာဒီကာ အလိုအလျောက်တွက်ချက်စနစ်</div></div></header>
+<header><div class="top"><div><div class="title">နာဒီကာ နာရီစက်ဝိုင်း <span style="font-size:11px;color:#f2c96f">v24</span></div><div class="sub">မနက် ၆ ည ၆ တွက်ချက်မှု နှင့် နေထွက် နေဝင်တွက်ချက်မှု</div></div><div class="sub">နာဒီကာ အလိုအလျောက်တွက်ချက်စနစ်</div></div></header>
 <div class="tabs"><button class="tab active" data-page="home">မူလစာမျက်နှာ</button><button class="tab" data-page="daily">တစ်နေ့တာနာဒီကာ</button><button class="tab" data-page="week">တစ်ပတ်စာ</button></div>
 <main>
 <section id="home" class="page active">
 
-  <div class="clockWrap"><div class="clockStage"><div id="clock" class="clock"><div class="nadiRing inner"></div><div class="nadiRing outer"></div><div id="labels"></div><div id="nadiRunner" class="nadiRunner"></div><div id="hourHand" class="hourHand"></div><div id="minuteHand" class="minuteHand"></div><div id="secondHand" class="secondHand"></div><div class="center"></div></div><div class="liveClock"><div id="liveClockTime" class="time">--:--:--</div><div id="liveClockDate" class="date"></div><div id="remainingTime" class="date" style="font-size:14px;font-weight:800;color:#9a731c;margin-top:7px">လက်ရှိနာဒီကာ ကျန်ချိန် --:--</div></div></div></div>
+  <div class="clockWrap"><div class="clockStage"><div id="clock" class="clock"><div class="nadiRing inner"></div><div class="nadiRing outer"></div><div class="numberOuterRing"></div><div id="labels"></div>
+<svg class="clockMandala" viewBox="0 0 200 200" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="1.15">
+    <circle cx="100" cy="100" r="47" opacity=".48"/>
+    <circle cx="100" cy="100" r="28" opacity=".30"/>
+    <g opacity=".62">
+      <path d="M100 52 C112 67 114 82 100 100 C86 82 88 67 100 52Z"/>
+      <path d="M148 100 C133 112 118 114 100 100 C118 86 133 88 148 100Z"/>
+      <path d="M100 148 C88 133 86 118 100 100 C114 118 112 133 100 148Z"/>
+      <path d="M52 100 C67 88 82 86 100 100 C82 114 67 112 52 100Z"/>
+      <path d="M66 66 C84 69 95 79 100 100 C79 95 69 84 66 66Z"/>
+      <path d="M134 66 C131 84 121 95 100 100 C105 79 116 69 134 66Z"/>
+      <path d="M134 134 C116 131 105 121 100 100 C121 105 131 116 134 134Z"/>
+      <path d="M66 134 C69 116 79 105 100 100 C95 121 84 131 66 134Z"/>
+    </g>
+    <g opacity=".45">
+      <circle cx="100" cy="62" r="2.4"/><circle cx="138" cy="100" r="2.4"/>
+      <circle cx="100" cy="138" r="2.4"/><circle cx="62" cy="100" r="2.4"/>
+      <circle cx="73" cy="73" r="2.4"/><circle cx="127" cy="73" r="2.4"/>
+      <circle cx="127" cy="127" r="2.4"/><circle cx="73" cy="127" r="2.4"/>
+    </g>
+  </g>
+</svg>
+<div id="nadiRunner" class="nadiRunner"></div><div id="hourHand" class="hourHand"></div><div id="minuteHand" class="minuteHand"></div><div id="secondHand" class="secondHand"></div><div class="center"></div></div><div class="liveClock"><div id="liveClockTime" class="time">--:--:--</div><div id="liveClockDate" class="date"></div><div id="remainingTime" class="date" style="font-size:14px;font-weight:800;color:#9a731c;margin-top:7px">လက်ရှိနာဒီကာ ကျန်ချိန် --:--</div></div></div></div>
   <div class="card result"><h2 id="currentName"></h2><div><span id="periodBadge" class="badge"></span><span id="indexBadge" class="badge"></span></div><div class="effect"><div>စိုးမိုးဂြိုဟ် — <span id="planet" class="planet"></span></div><div id="effect"></div></div></div>
   <div class="card">
     <div class="controls">
@@ -248,11 +1375,11 @@ function renderClock(){
   labels.innerHTML='';
   const r=clockRadius();
   const hourR=r-28;
-  const innerEl=clock.querySelector('.nadiRing.inner');
-  const outerEl=clock.querySelector('.nadiRing.outer');
-  const nadiInnerR=innerEl.getBoundingClientRect().width/2;
-  const nadiOuterR=outerEl.getBoundingClientRect().width/2;
-  const nadiR=(nadiInnerR+nadiOuterR)/2; // rendered ဘောင်နှစ်ခုအကြား တကယ့် midpoint
+  const mobile=window.matchMedia('(max-width:760px)').matches;
+  const innerRingR=r+10;
+  const outerRingR=r+(mobile?62:71);
+  const nadiR=(innerRingR+outerRingR)/2;
+
   for(let h=1;h<=12;h++){
     let a=h*30-90,e=document.createElement('div');e.className='tick';
     e.style.transform=`rotate(${a}deg) translate(${hourR}px)`;
@@ -264,7 +1391,11 @@ function renderClock(){
     e.style.transform=`rotate(${a}deg) translate(${nadiR}px)`;
     e.innerHTML=`<span style="transform:translate(-50%,-50%) rotate(${-a}deg)">${i+1}</span>`;labels.appendChild(e)
   }
-  currentName.textContent=c.entry.name;periodBadge.textContent=c.period+' နာဒီကာ';indexBadge.textContent=`${c.index+1}/30 • ${fmt(c.start)}–${fmt(c.end)}`;planet.textContent=P[c.period==='နေ့'?c.entry.day:c.entry.night];effect.textContent=c.entry.effect
+  currentName.textContent=c.entry.name;
+  periodBadge.textContent=c.period+' နာဒီကာ';
+  indexBadge.textContent=`${c.index+1}/30 • ${fmt(c.start)}–${fmt(c.end)}`;
+  planet.textContent=P[c.period==='နေ့'?c.entry.day:c.entry.night];
+  effect.textContent=c.entry.effect
 }
 function renderAnalogHands(now=new Date()){
   try{const c=calc(now,mode.value);const left=Math.max(0,c.end-now);const total=Math.ceil(left/1000);remainingTime.textContent=`လက်ရှိနာဒီကာ ကျန်ချိန် ${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}catch(e){}
@@ -272,17 +1403,16 @@ function renderAnalogHands(now=new Date()){
     const nc=calc(now,mode.value);
     const segSpan=nc.end-nc.start;
     const frac=segSpan>0?Math.max(0,Math.min(1,(now-nc.start)/segSpan)):0;
-    const innerEl=clock.querySelector('.nadiRing.inner');
-    const outerEl=clock.querySelector('.nadiRing.outer');
-    const innerR=innerEl.getBoundingClientRect().width/2;
-    const outerR=outerEl.getBoundingClientRect().width/2;
-    const ringGap=Math.max(12,outerR-innerR);
-    const markerSize=Math.max(16,Math.min(22,ringGap-8)); // ဘောင်နှစ်ဖက်ကို အနည်းဆုံး 4px စီချန်
+    const baseR=clockRadius();
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    const innerRingR=baseR+10;
+    const outerRingR=baseR+(mobile?62:71);
+    const r=(innerRingR+outerRingR)/2; // exact midpoint between inner and outer rings
+    const markerSize=mobile?20:23;
     nadiRunner.style.width=`${markerSize}px`;
     nadiRunner.style.height=`${markerSize}px`;
     nadiRunner.style.marginLeft=`${-markerSize/2}px`;
     nadiRunner.style.marginTop=`${-markerSize/2}px`;
-    const r=(innerR+outerR)/2; // rendered ဘောင်နှစ်ခုကြား center အတိအကျ
     const a=((nc.index+frac)*12-90)*Math.PI/180;
     const x=Math.cos(a)*r;
     const y=Math.sin(a)*r;
