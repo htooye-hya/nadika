@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="my" style="background:#06152f">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>နာဒီကာ နာရီစက်ဝိုင်း</title>
+<style>
+  :root{--bg:#fffdf8;--panel:#ffffff;--panel2:#fffaf0;--line:#d8b55b;--text:#3b2b12;--muted:#806b42;--accent:#b88716;--good:#5d7a42;--bad:#9d4c42}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,"Noto Sans Myanmar",sans-serif;background:linear-gradient(180deg,#fffdf8,#fff9e9);color:var(--text)}
+  header{position:sticky;top:0;z-index:10;background:rgba(255,253,248,.95);backdrop-filter:blur(12px);border-bottom:1px solid #d8b55b;padding:12px 14px}
+  .top{max-width:980px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between}.title{font-size:18px;font-weight:800}.sub{font-size:12px;color:var(--muted)}
+  .tabs{display:flex;gap:8px;overflow:auto;padding:10px 14px;border-bottom:1px solid #e2c675;background:#fffaf0}.tab{border:1px solid #d8b55b;background:#fff;color:#6b511c;padding:9px 13px;border-radius:8px;white-space:nowrap}.tab.active{background:#b88716;border-color:#9b6e0d;color:#fff}
+  main{max-width:980px;margin:auto;padding:16px}.page{display:none}.page.active{display:block}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:linear-gradient(180deg,#ffffff,#fffaf0);border:1px solid #d8b55b;border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(126,91,20,.10)}
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field select{width:100%;padding:10px;border-radius:8px;border:1px solid #d8b55b;background:#fff;color:#3b2b12}
+  .clockWrap{display:grid;place-items:center;padding:24px 0 8px}
+  .clockStage{display:grid;place-items:center;position:relative;overflow:visible}
+  .clock{position:relative;width:min(80vw,480px);aspect-ratio:1;border-radius:50%;border:2px solid #b88716;background:radial-gradient(circle,#fff 0 49%,#fffaf0 50% 67%,#fffdf8 68%);box-shadow:0 0 0 3px #fff,0 0 0 5px #d9b45b,0 0 30px rgba(184,135,22,.14) inset;margin:58px}
+  .nadiRing{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:0}
+  .nadiRing.inner{width:calc(100% + 32px);height:calc(100% + 32px);border:2px solid #c79a31}
+  .nadiRing.outer{width:calc(100% + 92px);height:calc(100% + 92px);border:2px solid #b88716;box-shadow:0 0 0 3px #fffdf8,0 0 0 4px rgba(184,135,22,.28)}
+  .tick,.nadiLabel{position:absolute;left:50%;top:50%;transform-origin:0 0;white-space:nowrap;z-index:2}.tick span,.nadiLabel span{display:grid;place-items:center;transform:translate(-50%,-50%)}.tick span{font-size:13px;font-weight:800;color:#3b2b12}.nadiLabel span{min-width:18px;height:18px;padding:0 2px;font-size:10px;font-weight:900;color:#8a6414;line-height:1;background:transparent}.nadiLabel.current span{color:#5f4510;font-size:12px;font-weight:900;text-shadow:0 0 4px rgba(255,255,255,.9)}
+
+  .nadiRunner{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:rgba(110,110,110,.08);border:2px solid rgba(82,82,82,.58);box-shadow:0 1px 3px rgba(0,0,0,.06);z-index:4;pointer-events:none;transition:transform .9s linear;backdrop-filter:none}
+
+  /* v12: marker ကို ခန့်မှန်း radius မသုံးဘဲ rendered inner/outer ring အရွယ်အစားကို တိုင်းပြီး တကယ့် midpoint တွင်ထားသည်။ Marker diameter ကို ring gap အတွင်း အလိုအလျောက် ချုံ့ထားသည်။ */
+  .nadiRunner::before,.nadiRunner::after{content:none!important;display:none!important}
+  .hourHand{position:absolute;left:50%;top:50%;width:4px;height:30%;background:#5c4519;transform-origin:50% 100%;translate:-50% -100%;border-radius:3px;box-shadow:0 0 8px rgba(255,255,255,.45)}.minuteHand{position:absolute;left:50%;top:50%;width:3px;height:37%;background:#b88716;transform-origin:50% 100%;translate:-50% -100%;border-radius:3px}.secondHand{position:absolute;left:50%;top:50%;width:1px;height:40%;background:#b54b35;transform-origin:50% 100%;translate:-50% -100%}.center{position:absolute;left:50%;top:50%;translate:-50% -50%;width:15px;height:15px;background:#fff;border:4px solid #b88716;border-radius:50%;z-index:5}.liveClock{margin-top:14px;text-align:center}.liveClock .time{font-variant-numeric:tabular-nums;font-size:28px;font-weight:900;letter-spacing:1px}.liveClock .date{font-size:12px;color:var(--muted);margin-top:3px}.locationStatus{margin-top:8px;font-size:12px;color:#806b42}.locBtn{margin-top:8px;border:1px solid #b88716;background:#fff8e7;color:#5b4212;padding:8px 12px;border-radius:8px;cursor:pointer}
+  .result h2{margin:0 0 8px;font-size:20px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff5d8;border:1px solid #d8b55b;font-size:12px;margin-right:5px}.effect{margin-top:10px;line-height:1.8;background:#fffdf7;border:1px solid #e0c675;padding:12px;border-radius:10px}.planet{color:#a3740d;font-weight:800}
+  .list{display:grid;gap:8px}.row{padding:10px 12px;border:1px solid #e0c675;background:#fffdf7;border-radius:9px}.row.current{outline:2px solid #b88716;background:#fff5d8}.row .meta{font-size:12px;color:#806b42;margin-top:4px}.row .ef{font-size:13px;line-height:1.6;margin-top:5px;color:#4d3b1d}
+  .modeNote{font-size:12px;color:#806b42;margin-top:7px}.sectionTitle{margin:0 0 10px;font-size:17px}.weekDay{margin:14px 0 7px;font-weight:800;color:#a3740d}
+  .calendarExportBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.calendarExportBtn{border:1px solid #9b6e0d;background:#b88716;color:#fff;padding:10px 14px;border-radius:8px;font-weight:800;cursor:pointer}.calendarExportBtn:active{transform:translateY(1px)}.calendarExportNote{font-size:12px;color:#806b42;line-height:1.5}
+
+  @media(max-width:760px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.clock{width:min(70vw,390px);margin:50px}.tick span{font-size:11px}.nadiLabel span{font-size:9px;min-width:16px;height:16px}.nadiLabel.current span{font-size:11px}.liveClock .time{font-size:24px}}
+
+  /* v16 startup: paint the supplied splash artwork on the very first web frame.
+     No app UI is painted underneath while booting. */
+  html{background:#06152f}
+  body.booting{overflow:hidden;background:#06152f!important}
+  body.booting>header,body.booting>.tabs,body.booting>main{display:none!important}
+  #startupSplash{position:fixed;inset:0;z-index:2147483647;background-color:#06152f;background-image:url("assets/splash.png");background-repeat:no-repeat;background-position:center;background-size:cover;opacity:1;transition:opacity .22s ease;overflow:hidden}
+  #startupSplash.hide{opacity:0;pointer-events:none}
+  @media (orientation:landscape){#startupSplash{background-size:contain}}
+</style>
+
+<meta name="theme-color" content="#06152f" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="preload" as="image" href="assets/splash.png" />
+</head>
+<body class="booting">
+<div id="startupSplash" aria-label="App splash"></div>
+<header><div class="top"><div><div class="title">နာဒီကာ နာရီစက်ဝိုင်း</div><div class="sub">မနက် ၆ ည ၆ တွက်ချက်မှု နှင့် နေထွက် နေဝင်တွက်ချက်မှု</div></div><div class="sub">နာဒီကာ အလိုအလျောက်တွက်ချက်စနစ်</div></div></header>
+<div class="tabs"><button class="tab active" data-page="home">မူလစာမျက်နှာ</button><button class="tab" data-page="daily">တစ်နေ့တာနာဒီကာ</button><button class="tab" data-page="week">တစ်ပတ်စာ</button></div>
+<main>
+<section id="home" class="page active">
+
+  <div class="clockWrap"><div class="clockStage"><div id="clock" class="clock"><div class="nadiRing inner"></div><div class="nadiRing outer"></div><div id="labels"></div><div id="nadiRunner" class="nadiRunner"></div><div id="hourHand" class="hourHand"></div><div id="minuteHand" class="minuteHand"></div><div id="secondHand" class="secondHand"></div><div class="center"></div></div><div class="liveClock"><div id="liveClockTime" class="time">--:--:--</div><div id="liveClockDate" class="date"></div><div id="remainingTime" class="date" style="font-size:14px;font-weight:800;color:#9a731c;margin-top:7px">လက်ရှိနာဒီကာ ကျန်ချိန် --:--</div></div></div></div>
+  <div class="card result"><h2 id="currentName"></h2><div><span id="periodBadge" class="badge"></span><span id="indexBadge" class="badge"></span></div><div class="effect"><div>စိုးမိုးဂြိုဟ် — <span id="planet" class="planet"></span></div><div id="effect"></div></div></div>
+  <div class="card">
+    <div class="controls">
+      <div class="field"><label>တွက်ချက်စနစ်</label><select id="mode"><option value="fixed">မနက် ၆ ည ၆ တွက်ချက်မှု</option><option value="solar">နေထွက် နေဝင်တွက်ချက်မှု</option></select></div>
+      <div class="field"><label>နေ့ရက်/အချိန်</label><input id="dt" type="datetime-local"></div>
+      <div class="field"><label>နေထွက်ချိန်</label><input id="sunrise" type="time" value="05:45"></div>
+      <div class="field"><label>နေဝင်ချိန်</label><input id="sunset" type="time" value="18:25"></div>
+    </div>
+    <div class="modeNote">နေထွက် နေဝင်တွက်ချက်မှုတွင် device location ကိုအသုံးပြုပြီး နေထွက်/နေဝင်ချိန်ကို အလိုအလျောက်တွက်ပေးပါမည်။</div>
+    <div id="locationStatus" class="locationStatus">Location ခွင့်ပြုချက် တောင်းယူရန် ပြင်ဆင်နေသည်…</div>
+    <button id="locBtn" class="locBtn" type="button">Location ခွင့်ပြုရန် / ပြန်စမ်းရန်</button>
+  </div>
+</section>
+<section id="daily" class="page"><div class="card"><div class="controls"><div class="field"><label>ရက်ရွေးရန်</label><input id="dailyDate" type="date"></div><div class="field"><label>စနစ်</label><select id="dailyMode"><option value="fixed">မနက် ၆ ည ၆ တွက်ချက်မှု</option><option value="solar">နေထွက် နေဝင်တွက်ချက်မှု</option></select></div></div></div><div class="card" style="margin-top:12px"><h3 class="sectionTitle">တစ်နေ့တာ နာဒီကာ ၆၀ ပိုင်း</h3><div id="dailyList" class="list"></div></div></section>
+<section id="week" class="page"><div class="card"><div class="controls"><div class="field"><label>တစ်ပတ်စတင်ရက်</label><input id="weekStart" type="date"></div><div class="field"><label>ကြည့်မည့်ရက်</label><select id="weekDaySelect"></select></div><div class="field"><label>စနစ်</label><select id="weekMode"><option value="fixed">မနက် ၆ ည ၆ တွက်ချက်မှု</option><option value="solar">နေထွက် နေဝင်တွက်ချက်မှု</option></select></div></div><div class="calendarExportBar"><button id="exportWeekCalendar" class="calendarExportBtn" type="button">📅 တစ်ပတ်စာ Calendar သို့ ထုတ်ရန် (.ics)</button><div id="calendarExportNote" class="calendarExportNote">ရွေးထားသော တစ်ပတ်အတွင်း နာဒီကာပြောင်းသည့် အချိန်တိုင်းကို Calendar event အဖြစ် ထုတ်ပြီး၊ အချိန်ရောက်ချိန်တွင် Calendar notification ပဲ သတိပေးမည်။</div></div></div><div class="card" style="margin-top:12px"><h3 class="sectionTitle">နောက်တစ်ပတ်စာ နာဒီကာ — ရက်တစ်ရက်ချင်း</h3><div id="weekList"></div></div></section>
+</main>
+
+<script>
+(function(){
+  const splash=document.getElementById('startupSplash');
+  const minShow=1100;
+  const started=performance.now();
+  let revealed=false;
+  function reveal(){
+    if(revealed) return;
+    revealed=true;
+    const wait=Math.max(0,minShow-(performance.now()-started));
+    setTimeout(()=>{
+      document.body.classList.remove('booting');
+      if(splash){
+        splash.classList.add('hide');
+        setTimeout(()=>splash.remove(),240);
+      }
+    },wait);
+  }
+  // Wait for the window so the app never paints before the splash; hard fallback prevents a stuck splash.
+  if(document.readyState==='complete') reveal();
+  else window.addEventListener('load',reveal,{once:true});
+  setTimeout(reveal,2400);
+})();
+</script>
+<script>
+const P={1:'တနင်္ဂနွေ',2:'တနင်္လာ',3:'အင်္ဂါ',4:'ဗုဒ္ဓဟူး',5:'ကြာသပတေး',6:'သောကြာ',7:'စနေ'};
+const names=['ဝိသာခါ','အနုရာဓ','ဇေဋ္ဌ','မူလ','ဗြုဗ္ဗာသာန်','ဥတ္တရာသာန်','သရဝဏ်','ဓနသိဒ္ဓ','သတ္တဘိသ','ဗြုဗ္ဗာဘဒြပိုဒ်','ဥတ္တရာဘဒဒြပိုဒ်','ရေဝတီ','အဿဝဏီ','ဘရဏီ','ကြတ္တိကာ','ရောဟဏီ','မိဂသီ','အဒြ','ပုဏ္ဏဖုသျှ','ဖုသျှ','အဿလိဿ','မာဃ','ဗြုဗ္ဗဖလဂုဏီ','ဥတ္တရဖလဂုဏီ','ဟဿတ','စိတြ','သွာတိ','အလင်းဓာတ်','ဆည်းဆာ','မိတ်ဖွဲ့ခြင်း'];
+const effects={
+0:[
+'မိတ်ဖွဲ့ခြင်း၊ အစုစပ်လုပ်ခြင်း၊ လက်ထပ်ခြင်းတို့ကို ဖြစ်ပေါ်စေတတ်သည်။','စတင်ဆောင်ရွက်သော လုပ်ငန်းများ အားလုံး အကျိုးအမြတ် ကောင်းစွာ ရစေတတ်သည်။','စိတ်သဘောထား မတိုက်ဆိုင်မှုများ ဖြစ်ပေါ်ပြီး ထိုမှတစ်ဆင့် အကျိုးစီးပွား ဆုတ်ယုတ် ပျက်ပြားစေတတ်သည်။','ဤအချိန်တွင် စတင်လုပ်ဆောင်သော အလုပ်များသည် ဝင်ငွေ တိုးပွားစေလိမ့်မည်။','ဤအချိန်တွင် ကုန်သွယ်မှုကို အကြောင်းပြု၍ ပစ္စည်းဥစ္စာ ပိုင်ဆိုင်မှု တိုးပွားလိမ့်မည်။','ရရန် ခက်သော မည်သည့်အရာကိုမဆို လွယ်ကူစွာ ရရှိစေတတ်သည်။','အမျိုးသမီးများနှင့် ပတ်သက်သော မည်သည့်ကိစ္စမဆို ဤကာလတွင် ဆောင်ရွက်သော် အောင်မြင်စေတတ်သည်။','ဤကာလတွင် မျိုးစေ့များ၊ အစေ့အဆန်များနှင့် ပတ်သက်၍ ပြုလုပ်သော အလုပ်များ အောင်မြင်စေတတ်သည်။','ခရီးသွားခြင်းနှင့် ပတ်သက်၍ ကောင်းကျိုးပေးသည်။','အစားအသောက် တည်ခင်းခြင်း၊ စားသောက်ခြင်း၊ ဧည့်ဝတ် ပြုခြင်းများ အလွန် ကောင်းသည်။','ယောဂကဲ့သို့သော ကျင့်စဉ်များအတွက် အကျိုးပေးသည်။','ရန်သူများကို အနိုင်ယူခြင်း၊ အမှု စတင် စွဲဆိုခြင်းတို့အတွက် အလွန် ကောင်းသည်။','အခြေလေးချောင်း ရှိသော သတ္တဝါများနှင့် ပတ်သက်၍ မည်သည့် အလုပ် မဆို ပြုလုပ်ကောင်း၏။','ဘိသိက်ခံခြင်းမှစ၍ ဘွဲ့ထူး၊ ဂုဏ်ထူးများ ခံယူခြင်း၊ ချီးမြှင့်ခြင်း၊ ရာထူး လက်ခံခြင်း၊ မင်းအစိုးရဆိုင်ရာ ကိစ္စများ အားလုံးတို့ ပြုလုပ်ကောင်း၏။','အိမ်တက်ခြင်း၊ အိမ်ခြံမြေ ဝယ်ခြင်းများ ဤအချိန်တွင် ပြုလုပ်မိလျှင် အနှောင့်အယှက် ကြီးစွာ ဖြစ်တတ်သည်။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','ဘုရားရုပ်ပွားတော် စတင် တည်ထားခြင်း၊ စတင် ကိုးကွယ်ခြင်း၊ အနေကဇာ တင်ခြင်း၊ နတ်ရုပ်များ စတင် တည်ထားခြင်း၊ စတင် ကိုးကွယ်ခြင်း၊ အသက်သွင်းခြင်းများ ပြုလုပ်ရန် ကောင်းမြတ်သော အချိန်ဖြစ်သည်။','သက်တော်စောင့်များ စတင်ထားရှိခြင်း၊ လက်နက်များ စတင် တပ်ဆင်ခြင်း၊ လုံခြုံရေး အစီအမံများ စတင်ပြုလုပ်ခြင်းတို့အတွက် ကောင်းမြတ်သော အခါဖြစ်သည်။','ငွေကြေးပါဝင်သော မည်သည့်ကိစ္စမျိုးကိုမဆို လုပ်ဆောင်မိလျှင် ငွေကြေး ဆုံးရှုံးရသော ကာလဖြစ်သည်။','တရားရေးကိစ္စများ၊ အမှုအခင်းများတွင် စတင်မိလျှင် ဆုံးရှုံးတတ်သော ကာလဖြစ်သည်။','မိတ်သစ်ဖွဲ့ခြင်းအတွက် ကောင်းမြတ်သော ကာလဖြစ်သည်။','စိတ်သဘောထား ကွဲလွဲမှုများကို ကောင်းစွာ စေ့စပ်ညှိနှိုင်းမှု ပြုလုပ်နိုင်သော ကာလဖြစ်သည်။','ရှိပြီးဖြစ်သော မိမိ ခင်မင်နှစ်သက်ရသူများနှင့် ချစ်မြတ်နိုးမှု တိုးပွားစေခြင်းတို့အတွက် အလွန်ကောင်းမြတ်သော ကာလဖြစ်သည်။','ကုန်အရောင်းအဝယ်များတွင် အမြတ်အစွန်း ကောင်းစွာ ရလိမ့်မည်။','သားသမီး ရလို၍ လိင်ဆက်ဆံသူများအတွက် ဤကာလတွင် သန္ဓေတည်မှု လွယ်ကူစေတတ်သည်။','ကျက်သရေ မင်္ဂလာရှိသော မည်သည့်အလုပ်မျိုးမဆို လုပ်ကောင်းသည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင် လုပ်ကိုင်သည်ဖြစ်စေ အနှောင့်အယှက် အလွန်ကြီးမားခြင်း၊ ဆုံးရှုံးမှု အလွန်ကြီးမားခြင်း ရှိမည်။','ရေရှည်လုပ်ဆောင်ရသော လုပ်ငန်းများ၊ စွန့်ဦးတီထွင်လုပ်ငန်းများကို ဤကာလတွင် စတင်ဆောင်ရွက်လျှင် လွယ်လင့်တကူ အောင်မြင်စေတတ်သည်။'],
+1:['အကျိုးအမြတ် ကောင်းစွာရလိုသော အလုပ်များ စတင်သင့်သော အချိန်ဖြစ်ပါသည်။','ခရီးတိုဖြစ်စေ၊ ခရီးရှည်ဖြစ်စေ စတင်ထွက်ခွာသင့်သော ကာလဖြစ်ပါသည်။','မည်သည့်အလုပ်ကို စတင်သည်ဖြစ်စေ အောင်မြင်စေတတ်သည်။','မည်သည့်အလုပ်ကို စတင်သည်ဖြစ်စေ အကျိုးအမြတ် ကောင်းစွာ ရရှိစေတတ်သည်။','နာလန်ထ လူမမာများ စတင်ရေချိုးရန် ကောင်းမြတ်သော အခါ။','မည်သည့်အလုပ်ကို စတင်သည်ဖြစ်စေ အောင်မြင်စေတတ်သည်။','စိုက်ပျိုးခြင်းနှင့်ပတ်သက်သော မည်သည့်အလုပ်ကိုမဆို အကျိုးပြုစေတတ်သည်။','လောင်းကစားနှင့် လောင်းကစားဆန်သော အလုပ်မျိုးများမှ ငွေကြေးအမြတ်အစွန်း ရစေတတ်သော ကာလ။','မြို့ပြပြည်ရွာကို ရစေတတ်သော၊ မင်းဖြစ်စေတတ်သော၊ ရာထူးရာခံကြီးစွာ ရစေတတ်သော ကာလဖြစ်သည်။','အစားအသောက်တည်ခင်းခြင်း၊ စားသောက်ခြင်းနှင့် ဖျော်ဖြေရေး လုပ်ငန်းများအတွက် အလွန်ကောင်းသည်။','အမျိုးသမီးများနှင့် မိတ်ဖွဲ့ခြင်း ကောင်းမြတ်လှသည်။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','တရားရေးကိစ္စများ၊ အမှုအခင်းများ စတင်သော် အောင်မြင်စေတတ်သည်။','လူသိလျှင် နာမည်ပျက်၊ သိက္ခာကျမည်ဖြစ်သော မည်သည့်အလုပ်မျိုးကိုမဆို ဤကာလတွင် ဆောင်ရွက်လျှင် အောင်မြင်လွယ်စေသည်။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','ဒီအချိန်မှာ အဆိပ်သောက်ရင်တောင် အဆိပ်ဟာ မသေဆေးလို့ခေါ်တဲ့ အမြိုက်ရည် ဖြစ်သွားပါလိမ့်မယ်။','ပျော်ပွဲရွှင်ပွဲများအတွက် အလွန်ကောင်းပါတယ်။','အစု၊ အဖွဲ့၊ အသင်းများနှင့်ပတ်သက်ပြီး ဘယ်လိုအလုပ်မျိုးမဆို လုပ်ကောင်းတဲ့ မင်္ဂလာအခါပါ။','အားကစားပွဲများ၊ ကစားခုန်စားပွဲများ ပြုလုပ်ကောင်း၏။','လက်ထပ်မင်္ဂလာနှင့်ပတ်သက်သော ကိစ္စများ ပြုလုပ်ကောင်း၏။ မင်္ဂလာဆောင် နှစ်ပတ်လည်ပွဲများ၊ စေ့စပ်ပွဲများလည်း လုပ်ကောင်းပါသည်။','အိမ်သစ်တက်ခြင်း၊ အိမ်ခြံမြေ လက်ရောက်ယူခြင်း၊ သိမ်းပိုက်ခြင်းတို့အတွက် အလွန်ကောင်းမြတ်သည်။','မည်သည့်အလုပ်မဆို ပြုလုပ်လျှင် အောင်မြင်လွယ်၏။','အပင်စိုက်၊ အပင်ပျိုး၊ မျိုးစေ့ချခြင်း စသည်တို့ကဲ့သို့သော စိုက်ပျိုးရေးဆိုင်ရာကိစ္စများ အလွန်ပြုလုပ်ကောင်း၏။','ဧည့်ဝတ်ပြုခြင်းအတွက် အလွန်ကောင်း၏။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ကိုင်သည်ဖြစ်စေ စိတ်သဘောထား ကွဲလွဲခြင်း၊ ရန်ဖြစ်ခြင်းတွင် အဆုံးသတ်လိမ့်မည်။','ကောင်းမြတ်သော မည်သည့်အလုပ်မျိုးမဆို ပြုလုပ်ကောင်း၏။'],
+2:['မည်သည့်အလုပ်ကိုမဆို စတင်လုပ်ဆောင်သည်ရှိသော် ထိုအလုပ်ကို အကြောင်းပြု၍ ဝမ်းနည်းပူဆွေးရတတ်သည်။','မည်သည့်အလုပ်ကိုမဆို စတင်လုပ်ဆောင်သည်ရှိသော် အောင်မြင်စေတတ်သည်။','မိမိ၏ ဩဇာအာဏာ ဘုန်းတန်ခိုး အစွမ်းအစတို့ကို ထုတ်ဖော်ပြသရန် အကောင်းဆုံးအခါ။','တစ်ဖက်သားကို တားမြစ်ကန့်သတ်မှု၊ ထိန်းချုပ်မှုဆိုင်ရာ မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။','အကျိုးအမြတ် ရရှိစေတတ်၏။','မိတ်ဆွေကောင်းများ ရရှိရန် စတင်ဆောင်ရွက်ခြင်း အလွန်ကောင်းမြတ်သည်။','မြင်းများနှင့် ပတ်သက်၍ မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။','နွားများ၊ ကျွဲများနှင့် ပတ်သက်၍ မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။','ခရီးသွားသော် ဆုံးရှုံးမှုများ ကြုံရမည်။','ဇနီးလောင်း စတင်ရှာဖွေရန် အကောင်းမြတ်ဆုံးအချိန်ဖြစ်သည်။ လက်ထပ်ရန် ကမ်းလှမ်းမှုမှအစ မည်သည့်ကမ်းလှမ်းမှုမျိုးမဆို ပြုလုပ်ကောင်းသည်။','စေ့စပ်ကြောင်းလမ်းခြင်း၊ လက်ထပ်ခြင်းမှစ၍ လက်ထပ်မင်္ဂလာနှင့် ပတ်သက်သော မည်သည့်ကိစ္စမဆို ပြုလုပ်ကောင်း၏။','ကုန်စည်ကူးသန်းရောင်းဝယ်မှုများအတွက် အလွန်ကောင်းမြတ်သည်။','ခရီးသွားခြင်းနှင့် သက်ဆိုင်သော မည်သည့်အလုပ်မဆို လုပ်ဆောင်သော် အကျိုးအမြတ်ရရှိ အောင်မြင်စေတတ်သည်။','ဤကာလတွင် ခရီးသွားသော် သူခိုးဘေး၊ တိရစ္ဆာန်ဘေး သင့်တတ်သည်။','မည်သည့်အလုပ်ကို စတင်လုပ်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ မီးဘေး၊ လက်နက်ဘေးတို့ သင့်စေတတ်သည်။','မည်သည့်အလုပ်ကို စတင်လုပ်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဆင်းရဲမွဲတေစေတတ်သည်။','ဤကာလတွင် မိုးရွာစေသော အစီအရင်မျိုး ပြုလုပ်မိလျှင် မိုးမရွာစေတတ်သည့်အပြင် မိုးခေါင်စေတတ်သည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ မိတ်ပျက်တတ်သည်။','မည်သည့်ယတြာ အစီအရင်မဆို လုပ်လျှင် အထူးအောင်မြင်စေတတ်သည်။','ဂီတသံစဉ်များ နားထောင်ခြင်း၊ ဖန်တီးခြင်း ကောင်းမြတ်သည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ စိုးရိမ်ပူပန် သောကများစေတတ်သည်။','တရားရုံးရေးရာ၊ အမှုအခင်းကိစ္စများတွင် ပျက်စီးဆုံးရှုံးစေတတ်သည်။','ငွေကြေးစီးပွားဥစ္စာကို အလွန်လွယ်ကူစွာ ရရှိစေတတ်သည်။','ရန်သူများအပေါ် အောင်မြင်စေတတ်သည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ မိတ်ပျက်၊ လမ်းခွဲစေတတ်သည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ အထီးကျန်ဆန်စေတတ်သည်။','လိင်မှုကိစ္စ မပြုလုပ်ကောင်း။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ အထူးပျော်ရွှင်စေရတတ်သည်။','မည်သည့်အလုပ်ကို လုပ်သည်ဖြစ်စေ အောင်မြင်စေတတ်သည်။','လိင်ဆက်ဆံမှုပြုသော် မကျေနပ်မှု သာယာမှုမရှိ ဖြစ်ရတတ်သည်။'],
+3:['ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ သတင်းဆိုးများ၊ ရုန့်ရင်းသော စကားများ ကြားရမည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ဆုံးရှုံးမှုများ ကြုံတွေ့ရမည်။','ဤကာလတွင် လိင်ဆက်ဆံခဲ့သော် လိင်ဆက်ဆံဖော် နှစ်ဦးကြား ချစ်ခြင်းမေတ္တာ ကုန်ခန်းသွားလိမ့်မည်။','အနုပညာဆိုင်ရာ အရည်အသွေးများ တိုးတက်စေတတ်သည်။','မည်သည့်အလုပ်ကို လုပ်သည်ဖြစ်စေ အကျိုးမရှိစေတတ်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ သတိထားပြီး လုပ်ဆောင်နိုင်ခြင်းမရှိလျှင် ထိခိုက်ဒဏ်ရာ ရရှိလိမ့်မည်။','ရန်များလိမ့်မည်။','အခက်အခဲများ ပြေလည်လိမ့်မည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ နာမည် ဂုဏ်သိက္ခာ အထူးကောင်းမွန်မည်။','ရန်များ ပြိုပျက်မည်။','ချမ်းသာကြွယ်ဝမည်။','ချမ်းသာကြွယ်ဝမည်။','အောင်မြင်မည်။','အောင်မြင်မည်။','မင်းအစိုးရနှင့် ပတ်သက်သော မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။ မိမိ၏ ကိုးကွယ်မှုဆိုင်ရာ မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','စာအုပ်တွင် အချက်အလက် မပါဝင်ပါ။','မည်မျှခက်ခဲသော ကိစ္စမဆို ဤကာလတွင် လုပ်ဆောင်လျှင် လွယ်လင့်တကူ အောင်မြင်စေတတ်သည်။','ရန်သူတို့ကို ပြိုပျက်စေတတ်သည်။','ဤကာလတွင် လိင်ဆက်ဆံသော် သန္ဓေတည်စေတတ်သည်။','ရန်သူတို့ကို ပြိုပျက်စေတတ်သည်။ ရာထူးရာခံ အဆင့်မြင့်သူများ၊ မိမိထက် ပို၍ ချမ်းသာကြွယ်ဝသူများကို သွားရောက်တွေ့ဆုံရန် ကောင်းမွန်သည်။','မိတ်ဖွဲ့ခြင်း၊ ချစ်ခြင်းမေတ္တာ တိုးပွားစေခြင်းတို့အတွက် အလွန်ကောင်းမြတ်သောအခါ။','မိမိရရှိထားသော နေရာ၊ အဆင့်ကို မြဲမြံစေတတ်သည်။','မိတ်ဖွဲ့ခြင်း၊ ချစ်ခြင်းမေတ္တာ တိုးပွားစေခြင်းတို့အတွက် အလွန်ကောင်းမြတ်သောအခါ။','အကျိုးအမြတ် ရရှိစေတတ်သည်။','မိတ်ဖွဲ့ခြင်း၊ ချစ်ခြင်းမေတ္တာ တိုးပွားစေခြင်းတို့အတွက် အလွန်ကောင်းမြတ်။','အကျိုးအမြတ် ရရှိစေတတ်သည်။','မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ အကျိုးဆုတ်ယုတ် ပျက်ပြားစေတတ်သည်။'],
+4:['စီးပွားဥစ္စာ၊ ငွေကြေးနှင့်ပတ်သက်၍ မည်သည့်အလုပ်မဆို လုပ်ကောင်းသောအခါ။','ပျောက်ဆုံးထားသော ပစ္စည်းများ ပြန်ရှာတွေ့သောအချိန်။ ဆုံးရှုံးပြီးသော စီးပွားဥစ္စာတို့ကို ပြန်လည်ရရှိအောင် ဆောင်ရွက်နိုင်သော ကာလ။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ခန္ဓာကိုယ် ပင်ပန်းနွမ်းနယ်လိမ့်မည်။','အမွှေးနံ့သာ ပစ္စည်းများ ရရှိစေရန် ဆောင်ရွက်နိုင်သော အခါကောင်း။','နှုတ်မှုရေးရာစွမ်းရည် တိုးတက်စေရန် ဆောင်ရွက်နိုင်သော ကာလ။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဝမ်းနည်းပူဆွေးရမည်။','အောင်မြင်မှု ရလိမ့်မည်။','ရန်သူများ ပြိုပျက်လိမ့်မည်။','လူအများကို စည်းရုံးသိမ်းသွင်းရန် အလွန်ကောင်းသော အချိန်။','အကျိုးအမြတ် ကောင်းစွာရရှိမည်။','အစေ့အဆန်များနှင့် ပတ်သက်၍ ကောင်းကျိုး ရစေတတ်သော ကာလ။','မိမိရရှိထားပြီးသော အဆင့်ထက် ပို၍ မြင့်မားသော အဆင့်အတန်း၊ ရာထူးရာခံများ ရရှိစေရန် စတင်ဆောင်ရွက်နိုင်သော ကာလ။','ပျော်ပွဲရွှင်ပွဲများ၊ ပွဲလမ်းသဘင်များအတွက် အလွန်ကောင်းမြတ်သော ကာလ။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ရောဂါများ ဖြစ်ပေါ်စေလိမ့်မည်။','ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ကံအလွန်ကောင်းခြင်း၊ အထူး ချမ်းသာကြွယ်ဝခြင်း ရှိမည်။','အလုပ်အကိုင် ဆုံးရှုံးထိခိုက် နစ်နာစေလိမ့်မည်။','ဤကာလတွင် ရန်ဖြစ်လျှင် လက်နက်ဘေး သင့်လိမ့်မည်။ ဤကာလသည် လက်နက်နှင့် အကျိုးမပေး။','အောင်မြင်မည်။','စိတ်ခွန်အား၊ ရုပ်ခွန်အား ဆုံးရှုံးမည်။','ဤကာလတွင် ခရီးသွားလျှင် ယာဉ်ရထားသည် လုံးဝပျက်စီးလိမ့်မည်။','ခရီးထွက်သော် အလွန် ချမ်းသာကြွယ်ဝလိမ့်မည်။',
+...Array(9).fill('ဒေတာထပ်ဖြည့်ရန်')],
+5:Array(30).fill('ဒေတာထပ်ဖြည့်ရန်'),6:Array(30).fill('ဒေတာထပ်ဖြည့်ရန်')};
+const startPlanet={0:[1,3,5,7,2,4,6],1:[2,4,6,1,3,5,7],2:[3,5,7,2,4,6,1],3:[4,6,1,3,5,7,2],4:[5,7,2,4,6,1,3],5:[6,1,3,5,7,2,4],6:[7,2,4,6,1,3,5]};
+function buildDB(){let db={};for(let d=0;d<7;d++){db[d]=[];for(let i=0;i<30;i++){let day=startPlanet[d][i%7],night=((day+3)%7)+1;db[d].push({name:`${i+1}။ ${names[i]} (နေ့-${day}၊ ည-${night})`,day,night,effect:effects[d][i]||'ဒေတာထပ်ဖြည့်ရန်'});}}return db}const nadikaDatabase=buildDB();
+// စာအုပ်မှ ထပ်ဖြည့်/ပြင်ဆင်ထားသော နာဒီကာဒေတာ
+Object.assign(nadikaDatabase[0][15],{effect:'မြို့ပြပြည်ရွာတည်ထောင်ခြင်း၊ အိမ်ဆောက်ခြင်းစသည်တို့ ပြုလုပ်ရန် ကောင်းမြတ်လှသည်။'});
+Object.assign(nadikaDatabase[0][16],{effect:'ခရီးကိစ္စနှင့် ပတ်သက်လျှင် အနှောင့်အယှက် ကြီးစွာ ပေါ်တတ်သည်။'});
+Object.assign(nadikaDatabase[0][17],{effect:'မင်းအစိုးရစသော အုပ်ချုပ်သူ အာဏာရှိသူ လူတန်းစားများနှင့် သွားရောက်တွေ့ဆုံရန် ကောင်းမြတ်သောအချိန်။'});
+Object.assign(nadikaDatabase[1][11],{effect:'အစစအောင်မြင်စေတတ်သည်။'});
+Object.assign(nadikaDatabase[1][14],{effect:'မအောင်မြင်လျှင် လုံးဝမဖြစ်ဟူသော အလုပ်မျိုးကို ဤကာလတွင် စတင်ဆောင်ရွက်ပါ။'});
+Object.assign(nadikaDatabase[1][15],{effect:'ဆေးကုသမှုဆိုင်ရာ ကိစ္စအားလုံးအတွက် ကောင်းမြတ်သော ကာလ။'});
+Object.assign(nadikaDatabase[1][16],{effect:'အခြေလေးချောင်းရှိသော သတ္တဝါတို့နှင့် ပတ်သက်သော မည်သည့်ကိစ္စမဆို စတင်ဆောင်ရွက်နိုင်သော ကာလ။'});
+Object.assign(nadikaDatabase[1][17],{effect:'မအောင်မြင်လျှင် လုံးဝမဖြစ်ဟူသော အလုပ်မျိုးကို ဤကာလတွင် စတင်ဆောင်ရွက်ပါ။'});
+Object.assign(nadikaDatabase[1][18],{effect:'အိမ်သစ်တက်ခြင်း၊ အိမ်ခြံမြေ လက်ရယူခြင်း၊ သိမ်းပိုက်ခြင်းတို့အတွက် အလွန်ကောင်းမြတ်လှသည်။'});
+Object.assign(nadikaDatabase[3][15],{effect:'ချစ်ခြင်းမေတ္တာကို တိုးပွားစေတတ်သည်။'});
+Object.assign(nadikaDatabase[3][16],{effect:'နေရာ၊ ရာထူး၊ အဆင့် လွယ်ကူစွာ ရရှိစေတတ်သည်။'});
+Object.assign(nadikaDatabase[3][17],{effect:'ကောက်ကျစ်စဉ်းလဲသော ရန်သူနှင့် ရင်ဆိုင်လျှင် အောင်လွယ်စေတတ်သည်။'});
+Object.assign(nadikaDatabase[3][18],{effect:'အောင်မြင်စေတတ်သည်။'});
+
+
+// ===== စာအုပ်မှ အတည်ပြုပြီးသော ဒေတာများ (v4) =====
+function setNadika(dayIndex, entryNo, dayRuler, nightRuler, effect){
+  const e=nadikaDatabase[dayIndex][entryNo-1];
+  e.day=dayRuler; e.night=nightRuler; e.effect=effect;
+  e.name=`${entryNo}။ ${names[entryNo-1]} (နေ့-${dayRuler}၊ ည-${nightRuler})`;
+}
+
+// တနင်္ဂနွေ — ထပ်ဖြည့်အတည်ပြုဒေတာ
+setNadika(0,16,3,7,'မြို့ပြပြည်ရွာတည်ထောင်ခြင်း၊ အိမ်ဆောက်ခြင်းစသည်တို့ ပြုလုပ်ရန် ကောင်းမြတ်လှသည်။');
+setNadika(0,17,5,2,'ခရီးကိစ္စနှင့် ပတ်သက်လျှင် အနှောင့်အယှက် ကြီးစွာ ပေါ်တတ်သည်။');
+setNadika(0,18,7,4,'မင်းအစိုးရစသော အုပ်ချုပ်သူ အာဏာရှိသူ လူတန်းစားများနှင့် သွားရောက်တွေ့ဆုံရန် ကောင်းမြတ်သောအချိန်။');
+
+// တနင်္လာ — ထပ်ဖြည့်အတည်ပြုဒေတာ
+setNadika(1,12,3,7,'အစစအောင်မြင်စေတတ်သည်။');
+setNadika(1,15,2,6,'မအောင်မြင်လျှင် လုံးဝမဖြစ်ဟူသော အလုပ်မျိုးကို ဤကာလတွင် စတင်ဆောင်ရွက်ပါ။');
+setNadika(1,16,4,1,'ဆေးကုသမှုဆိုင်ရာ ကိစ္စအားလုံးအတွက် ကောင်းမြတ်သော ကာလ။');
+setNadika(1,17,6,3,'အခြေလေးချောင်းရှိသော သတ္တဝါတို့နှင့် ပတ်သက်သော မည်သည့်ကိစ္စမဆို စတင်ဆောင်ရွက်နိုင်သော ကာလ။');
+setNadika(1,18,1,5,'မအောင်မြင်လျှင် လုံးဝမဖြစ်ဟူသော အလုပ်မျိုးကို ဤကာလတွင် စတင်ဆောင်ရွက်ပါ။');
+setNadika(1,19,3,7,'အိမ်သစ်တက်ခြင်း၊ အိမ်ခြံမြေ လက်ရယူခြင်း၊ သိမ်းပိုက်ခြင်းတို့အတွက် အလွန်ကောင်းမြတ်လှသည်။');
+
+// ဗုဒ္ဓဟူး — ထပ်ဖြည့်အတည်ပြုဒေတာ
+setNadika(3,16,6,3,'ချစ်ခြင်းမေတ္တာကို တိုးပွားစေတတ်သည်။');
+setNadika(3,17,1,5,'နေရာ၊ ရာထူး၊ အဆင့် လွယ်ကူစွာ ရရှိစေတတ်သည်။');
+setNadika(3,18,3,7,'ကောက်ကျစ်စဉ်းလဲသော ရန်သူနှင့် ရင်ဆိုင်လျှင် အောင်လွယ်စေတတ်သည်။');
+setNadika(3,19,5,2,'အောင်မြင်စေတတ်သည်။');
+
+// ကြာသပတေး — ၂၂ မှ ၃၀ အတည်ပြုဒေတာ
+const thuExtra = [
+[22,5,2,'မိမိ ရရှိထားပြီးသော ရာထူးရာခံ၊ အဆင့်အတန်းကို မြဲမြံအောင် ဆောင်ရွက်တတ်သည်။'],
+[23,7,4,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်သည်ဖြစ်စေ မိမိ၏အမျိုးအဆွေတစ်ဦးဦး သေဆုံးလိမ့်မည်။'],
+[24,2,6,'စိတ်ခွန်အား / ရုပ်ခွန်အား တိုးပွားလိမ့်မည်။'],
+[25,4,1,'ရန်ပေါ်မည်။'],
+[26,6,3,'မိတ်ဖွဲ့မှုနှင့် ချစ်ခြင်းမေတ္တာတိုးပွားစေခြင်းအတွက် အလွန်ကောင်းမြတ်သောကာလ။'],
+[27,1,5,'အောင်မြင်မှု ရမည်။'],
+[28,3,7,'ခရီးသွားသော် သေခြင်း သို့မဟုတ် ကံဆိုးခြင်းရှိမည်။'],
+[29,5,2,'အကြောက်တရားကို ဖယ်ရှားနိုင်မည်။'],
+[30,7,4,'အောင်မြင်မည်။']];
+thuExtra.forEach(x=>setNadika(4,...x));
+
+// သောကြာ — ၁ မှ ၃၀ အတည်ပြုဒေတာ
+const friData = [
+[1,6,3,'အမျိုးသမီးများကို အကြောင်းပြု၍ အကျိုးအမြတ်များ ရရှိမည်။'],
+[2,1,5,'အောင်မြင်မှု ရမည်။'],
+[3,3,7,'စီးပွားဥစ္စာ၊ ငွေကြေးများ မပင်မပန်း အလွယ်တကူ ရရှိမည်။'],
+[4,5,2,'မျှော်လင့်မထားသော မိတ်ဖွဲ့မှုရှိမည်။'],
+[5,7,4,'အစီအရင်လုပ်ဆောင်လျှင် မိုးရွာစေတတ်သောကာလ။'],
+[6,2,6,'စိုက်ပျိုးရေးထုတ်ကုန်များ အလွန်တိုးပွားစေတတ်သည်။'],
+[7,4,1,'ဤကာလတွင် ဆေးကုခြင်း စတင်သော် သေလိမ့်မည်။'],
+[8,6,3,'လက်နက်ကိုင်အဖွဲ့အစည်းများတွင် ထိပ်ဆုံးရာထူး ရယူရန် ကောင်းမြတ်သောကာလ။'],
+[9,1,5,'ဆုံးရှုံးမည်။'],
+[10,3,7,'အကျိုးအမြတ်များ ရရှိမည်။'],
+[11,5,2,'တရားရေးကိစ္စများတွင် စိုးရိမ်မှုများ လျော့ပါးမည်။'],
+[12,7,4,'လူသိလျှင် နာမည်ပျက်၊ သိက္ခာကျမည်ဖြစ်သော မည်သည့်အလုပ်မျိုးကိုမဆို ဤကာလတွင် ဆောင်ရွက်လျှင် အောင်မြင်လွယ်စေသည်။ လုပ်ဆောင်နေကျမဟုတ်သော အလုပ်မျိုးများတွင် အောင်မြင်လိုလျှင်လည်း ဤကာလတွင် ဆောင်ရွက်နိုင်သည်။'],
+[13,2,6,'ပညာရေးဆိုင်ရာ ကိစ္စများ ဆောင်ရွက်လျှင် အောင်မြင်လွယ်စေသည်။'],
+[14,4,1,'ဆေးကုလျှင် ရောဂါပျောက်လွယ်သည်။'],
+[15,6,3,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဘေးအန္တရာယ်များစွာ ပေါ်ပေါက်လိမ့်မည်။'],
+[16,1,5,'ရန်သူများကို အကြောင်းပြု၍ အကျိုးအမြတ်ကြီးစွာ ရရှိလိမ့်မည်။'],
+[17,3,7,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဆုံးရှုံးနစ်နာလိမ့်မည်။'],
+[18,5,2,'ပညာရေးဆိုင်ရာ ကိစ္စများ ဆောင်ရွက်လျှင် အောင်မြင်လွယ်စေသည်။'],
+[19,7,4,'ဤကာလတွင် အစားအစာ စားလျှင် ကျန်းမာရေး ဖောက်ပြန်ပျက်စီးလိမ့်မည်။'],
+[20,2,6,'ဆွေမျိုးများတွင် ထိခိုက်ဒဏ်ရာ ရရှိလိမ့်မည်။'],
+[21,4,1,'ကုန်စည်သယ်ယူပို့ဆောင်ရေးဆိုင်ရာ ယာဉ်ရထားများနှင့် ပတ်သက်၍ မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။'],
+[22,6,3,'စကားပြောလျှင် ပျော်ရွှင်မှုကို တိုးပွားစေသည်။'],
+[23,1,5,'အောင်မြင်မည်။'],
+[24,3,7,'ခရီးသွားလျှင် ပျော်ရွှင်ရမည်။'],
+[25,5,2,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ စည်းစိမ်ဥစ္စာ ပျက်စီးမည်။'],
+[26,7,4,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဝမ်းနည်းပူဆွေးရမည်။'],
+[27,2,6,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ လက်သင့်မခံနိုင်ဖွယ် ဖြစ်ရပ်များ ကြုံရလိမ့်မည်။'],
+[28,4,1,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ စည်းစိမ်ခံစားရမည်။'],
+[29,6,3,'ကျက်သရေမင်္ဂလာ တိုးပွားမည်။'],
+[30,1,5,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ စီးပွားဥစ္စာ ပျက်စီးမည်။']];
+friData.forEach(x=>setNadika(5,...x));
+
+// စနေ — ၁ မှ ၃၀ အတည်ပြုဒေတာ (မာဃ ၂၂ = နေ့ ၆ / ည ၃)
+const satData = [
+[1,7,4,'တရားရေးဆိုင်ရာ ကိစ္စများတွင် အောင်မြင်စေတတ်သည်။'],
+[2,2,6,'မိမိထက် အဆင့်အတန်းမြင့်သောသူများကို အကြောင်းပြု၍ ကောင်းကျိုးချမ်းသာများ ရရှိလိမ့်မည်။'],
+[3,4,1,'ရန်သူ တိုးပွားလိမ့်မည်။'],
+[4,6,3,'မိတ်ဖွဲ့မှုနှင့် ချစ်ခြင်းမေတ္တာတိုးပွားစေခြင်းအတွက် အလွန်ကောင်းမြတ်သောကာလ။'],
+[5,1,5,'စကားပြောဆို ညှိနှိုင်းမှု အောင်မြင်မည်။'],
+[6,3,7,'ခြေလေးချောင်း သတ္တဝါများ ရယူပိုင်ဆိုင်ခြင်းနှင့် ပတ်သက်သော မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်း၏။'],
+[7,5,2,'ဤကာလတွင် ခရီးသွားသော် စိတ်ကျေနပ်မှု ဖြစ်ပေါ်မည်။'],
+[8,7,4,'အောင်မြင်မှု ရရှိလိမ့်မည်။'],
+[9,2,6,'စိတ်မကျေနပ်မှုများ ပြေပျောက်စေရန် ဆောင်ရွက်နိုင်သောကာလ။'],
+[10,4,1,'မည်မျှခက်ခဲသော ကိစ္စဖြစ်စေ၊ မည်မျှပြဿနာကြီးမားသော ကိစ္စဖြစ်စေ ဤကာလတွင် စတင်ဆောင်ရွက်လျှင် အောင်မြင်စေတတ်သည်။'],
+[11,6,3,'လိင်ဆက်ဆံမှု ဖြစ်ပေါ်စေတတ်သောကာလ။'],
+[12,1,5,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ မိမိ၏သားသမီးတွင် အန္တရာယ် ဖြစ်ပေါ်စေလိမ့်မည်။'],
+[13,3,7,'ဆွေမျိုးသားချင်းများနှင့် ပတ်သက်၍ စိတ်သဘောထား ကွဲလွဲမှု ဖြစ်ပေါ်မည်။ ဖြစ်လာလျှင် မိမိ နစ်နာဆုံးရှုံးမည်။'],
+[14,5,2,'လိမ်လည်လှည့်ဖျားရန် ကောင်းသောကာလ။'],
+[15,7,4,'တိုးတက်ကြီးပွားစေရန် ဆောင်ရွက်သော မည်သည့်ကိစ္စမဆို ပြုလုပ်ကောင်းသည်။'],
+[16,2,6,'ချမ်းသာကြွယ်ဝလိမ့်မည်။'],
+[17,4,1,'ခရီးသွားခြင်း ကောင်းမြတ်သည်။'],
+[18,6,3,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ်ကို အကြောင်းပြု၍ ဆုံးရှုံးမှုများ ဖြစ်ပေါ်လိမ့်မည်။'],
+[19,1,5,'ဤကာလတွင် မည်သည့်အလုပ်ကို စတင်လုပ်ဆောင်သည်ဖြစ်စေ ထိုအလုပ် ပြီးမြောက်စေရန် အင်မတန် ခွန်အားစိုက်ထုတ် ကြိုးစားရလိမ့်မည်။'],
+[20,3,7,'အစေ့အဆံများနှင့် ပတ်သက်သော မည်သည့်အလုပ်မဆို ပြုလုပ်ကောင်းသည်။ အကျိုးအမြတ် ရရှိမည်။'],
+[21,5,2,'ချမ်းသာကြွယ်ဝလိမ့်မည်။'],
+[22,6,3,'လိင်ဆက်ဆံမှု ဖြစ်ပေါ်စေလိမ့်မည်။'],
+[23,2,6,'အလွန်အမင်း ဆင်းရဲမွဲတေမည်။'],
+[24,4,1,'သတ္တိစွမ်းပြရသော လုပ်ငန်းများအတွက် အလွန်ကောင်းမြတ်သည်။'],
+[25,6,3,'ခန္ဓာကိုယ်သုခ တိုးပွားမည်။'],
+[26,1,5,'စိုးရိမ်ပူပန်မှု တိုးပွားမည်။'],
+[27,3,7,'ရန်သူများအပေါ် အောင်မြင်လိမ့်မည်။'],
+[28,5,2,'သေမည်။'],
+[29,7,4,'ဒေါသပြေပျောက်စေရန် ဖျောင်းဖျမှု အောင်မြင်လိမ့်မည်။'],
+[30,2,6,'ရေတွင်းရေကန် တူးဖော်မှုများ အောင်မြင်လိမ့်မည်။']];
+satData.forEach(x=>setNadika(6,...x));
+
+function hmToMin(s){let[a,b]=s.split(':').map(Number);return a*60+b} function dateAt(d,min){let x=new Date(d);x.setHours(Math.floor(min/60),min%60,0,0);return x}
+function calc(dt,mode){let day=dt.getDay(), sr=hmToMin(sunrise.value), ss=hmToMin(sunset.value), dayStart,dayEnd,period,baseDate=new Date(dt);baseDate.setHours(0,0,0,0);if(mode==='fixed'){sr=360;ss=1080}
+ let srD=dateAt(baseDate,sr),ssD=dateAt(baseDate,ss);if(dt>=srD&&dt<ssD){period='နေ့';dayStart=srD;dayEnd=ssD}else{period='ည';if(dt<srD){let y=new Date(baseDate);y.setDate(y.getDate()-1);dayStart=dateAt(y,ss);dayEnd=srD;day=y.getDay()}else{dayStart=ssD;let t=new Date(baseDate);t.setDate(t.getDate()+1);dayEnd=dateAt(t,sr)}}let span=dayEnd-dayStart,unit=span/30,index=Math.min(29,Math.floor((dt-dayStart)/unit));return{day,period,index,start:new Date(dayStart.getTime()+index*unit),end:new Date(dayStart.getTime()+(index+1)*unit),entry:nadikaDatabase[day][index]}}
+function fmt(t){return t.toLocaleTimeString('my-MM',{hour:'2-digit',minute:'2-digit'})}
+function clockRadius(){return clock.getBoundingClientRect().width/2}
+function renderClock(){
+  labels.innerHTML='';
+  const r=clockRadius();
+  const hourR=r-28;
+  const innerEl=clock.querySelector('.nadiRing.inner');
+  const outerEl=clock.querySelector('.nadiRing.outer');
+  const nadiInnerR=innerEl.getBoundingClientRect().width/2;
+  const nadiOuterR=outerEl.getBoundingClientRect().width/2;
+  const nadiR=(nadiInnerR+nadiOuterR)/2; // rendered ဘောင်နှစ်ခုအကြား တကယ့် midpoint
+  for(let h=1;h<=12;h++){
+    let a=h*30-90,e=document.createElement('div');e.className='tick';
+    e.style.transform=`rotate(${a}deg) translate(${hourR}px)`;
+    e.innerHTML=`<span style="transform:translate(-50%,-50%) rotate(${-a}deg)">${h}</span>`;labels.appendChild(e)
+  }
+  let c=calc(new Date(dt.value),mode.value);
+  for(let i=0;i<30;i++){
+    let a=i*12-90,e=document.createElement('div');e.className='nadiLabel'+(i===c.index?' current':'');
+    e.style.transform=`rotate(${a}deg) translate(${nadiR}px)`;
+    e.innerHTML=`<span style="transform:translate(-50%,-50%) rotate(${-a}deg)">${i+1}</span>`;labels.appendChild(e)
+  }
+  currentName.textContent=c.entry.name;periodBadge.textContent=c.period+' နာဒီကာ';indexBadge.textContent=`${c.index+1}/30 • ${fmt(c.start)}–${fmt(c.end)}`;planet.textContent=P[c.period==='နေ့'?c.entry.day:c.entry.night];effect.textContent=c.entry.effect
+}
+function renderAnalogHands(now=new Date()){
+  try{const c=calc(now,mode.value);const left=Math.max(0,c.end-now);const total=Math.ceil(left/1000);remainingTime.textContent=`လက်ရှိနာဒီကာ ကျန်ချိန် ${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}catch(e){}
+  try{
+    const nc=calc(now,mode.value);
+    const segSpan=nc.end-nc.start;
+    const frac=segSpan>0?Math.max(0,Math.min(1,(now-nc.start)/segSpan)):0;
+    const innerEl=clock.querySelector('.nadiRing.inner');
+    const outerEl=clock.querySelector('.nadiRing.outer');
+    const innerR=innerEl.getBoundingClientRect().width/2;
+    const outerR=outerEl.getBoundingClientRect().width/2;
+    const ringGap=Math.max(12,outerR-innerR);
+    const markerSize=Math.max(16,Math.min(22,ringGap-8)); // ဘောင်နှစ်ဖက်ကို အနည်းဆုံး 4px စီချန်
+    nadiRunner.style.width=`${markerSize}px`;
+    nadiRunner.style.height=`${markerSize}px`;
+    nadiRunner.style.marginLeft=`${-markerSize/2}px`;
+    nadiRunner.style.marginTop=`${-markerSize/2}px`;
+    const r=(innerR+outerR)/2; // rendered ဘောင်နှစ်ခုကြား center အတိအကျ
+    const a=((nc.index+frac)*12-90)*Math.PI/180;
+    const x=Math.cos(a)*r;
+    const y=Math.sin(a)*r;
+    nadiRunner.style.transform=`translate(${x}px,${y}px)`;
+  }catch(e){}
+  const sec=now.getSeconds()+now.getMilliseconds()/1000;
+  const min=now.getMinutes()+sec/60;
+  const hr=(now.getHours()%12)+min/60;
+  hourHand.style.transform=`rotate(${hr*30}deg)`;
+  minuteHand.style.transform=`rotate(${min*6}deg)`;
+  secondHand.style.transform=`rotate(${sec*6}deg)`;
+  liveClockTime.textContent=[now.getHours(),now.getMinutes(),now.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+  liveClockDate.textContent=now.toLocaleDateString('my-MM',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+function renderDaily(){let d=new Date(dailyDate.value+'T12:00');let modeV=dailyMode.value,sr=modeV==='fixed'?360:hmToMin(sunrise.value),ss=modeV==='fixed'?1080:hmToMin(sunset.value),base=new Date(d);base.setHours(0,0,0,0),html='';for(let p of ['နေ့','ည']){let st,en,dbDay=d.getDay();if(p==='နေ့'){st=dateAt(base,sr);en=dateAt(base,ss)}else{st=dateAt(base,ss);let n=new Date(base);n.setDate(n.getDate()+1);en=dateAt(n,sr)}let u=(en-st)/30;for(let i=0;i<30;i++){let e=nadikaDatabase[dbDay][i],planet=P[p==='နေ့'?e.day:e.night];html+=`<div class="row"><b>${p} ${i+1}။ ${names[i]}</b><div class="meta">${fmt(new Date(st.getTime()+i*u))}–${fmt(new Date(st.getTime()+(i+1)*u))} • စိုးမိုးဂြိုဟ် ${planet}</div><div class="ef">${e.effect}</div></div>`}}dailyList.innerHTML=html}
+function updateWeekDayOptions(){let s=new Date(weekStart.value+'T12:00');let old=weekDaySelect.value;weekDaySelect.innerHTML='';for(let k=0;k<7;k++){let d=new Date(s);d.setDate(s.getDate()+k);let o=document.createElement('option');o.value=String(k);o.textContent=d.toLocaleDateString('my-MM',{weekday:'long',month:'long',day:'numeric'});weekDaySelect.appendChild(o)}if(old&&Number(old)<7)weekDaySelect.value=old}
+function renderWeek(){if(!weekDaySelect.options.length)updateWeekDayOptions();let s=new Date(weekStart.value+'T12:00'),k=Number(weekDaySelect.value||0),d=new Date(s);d.setDate(s.getDate()+k);let day=d.getDay(),html=`<div class="weekDay">${d.toLocaleDateString('my-MM',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>`;for(let i=0;i<30;i++){let e=nadikaDatabase[day][i];html+=`<div class="row"><b>${i+1}။ ${names[i]}</b><div class="meta">နေ့ ${P[e.day]} • ည ${P[e.night]}</div><div class="ef">${e.effect}</div></div>`}weekList.innerHTML=html}
+
+
+function weekDayTiming(date, modeV){
+  const base=new Date(date); base.setHours(0,0,0,0);
+  let sr=360, ss=1080;
+  if(modeV==='solar'){
+    if(userCoords){
+      const ru=solarUTC(date,userCoords.lat,userCoords.lon,true);
+      const su=solarUTC(date,userCoords.lat,userCoords.lon,false);
+      if(ru!=null && su!=null){ sr=minutesLocalFromUTC(ru,date); ss=minutesLocalFromUTC(su,date); }
+      else { sr=hmToMin(sunrise.value); ss=hmToMin(sunset.value); }
+    }else{ sr=hmToMin(sunrise.value); ss=hmToMin(sunset.value); }
+  }
+  const dayStart=dateAt(base,sr), dayEnd=dateAt(base,ss);
+  const nextBase=new Date(base); nextBase.setDate(nextBase.getDate()+1);
+  const nightStart=dateAt(base,ss);
+  let nextSr=sr;
+  if(modeV==='solar' && userCoords){
+    const ru2=solarUTC(nextBase,userCoords.lat,userCoords.lon,true);
+    if(ru2!=null) nextSr=minutesLocalFromUTC(ru2,nextBase);
+  }
+  const nightEnd=dateAt(nextBase,nextSr);
+  return {dayStart,dayEnd,nightStart,nightEnd,sr,ss,nextSr};
+}
+function icsEscape(v){return String(v??'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
+function icsDateUTC(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z')}
+function foldICSLine(line){
+  // ASCII/Burmese UTF-8 byte folding is optional for most modern calendar apps; keep readable and compatible.
+  return line;
+}
+function exportWeeklyCalendar(){
+  try{
+    const start=new Date(weekStart.value+'T12:00');
+    if(Number.isNaN(start.getTime())) throw new Error('တစ်ပတ်စတင်ရက် မမှန်ပါ။');
+    const modeV=weekMode.value;
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Nadika Dual Clock//Weekly Export v14//MY','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:နာဒီကာ တစ်ပတ်စာ'];
+    let eventCount=0;
+    for(let k=0;k<7;k++){
+      const d=new Date(start); d.setDate(start.getDate()+k);
+      const day=d.getDay();
+      const t=weekDayTiming(d,modeV);
+      const periods=[['နေ့',t.dayStart,t.dayEnd,'day'],['ည',t.nightStart,t.nightEnd,'night']];
+      for(const [period,st,en,key] of periods){
+        const unit=(en-st)/30;
+        for(let i=0;i<30;i++){
+          // Export only the transition moment: the instant this Nadika begins.
+          const evStart=new Date(st.getTime()+i*unit);
+          const e=nadikaDatabase[day][i];
+          const ruler=P[key==='day'?e.day:e.night];
+          const uid=`nadika-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${key}-${i+1}@nadika-dual-clock`;
+          const summary=`နာဒီကာပြောင်းချိန် — ${period} ${i+1}။ ${names[i]} — ${ruler}`;
+          const description=`နာဒီကာ ${i+1}/30 စတင်ပြောင်းသည့်အချိန်\n${period} စိုးမိုးဂြိုဟ် — ${ruler}\nအကျိုးပေး — ${e.effect}`;
+          lines.push(
+            'BEGIN:VEVENT',
+            `UID:${icsEscape(uid)}`,
+            `DTSTAMP:${icsDateUTC(new Date())}`,
+            `DTSTART:${icsDateUTC(evStart)}`,
+            `SUMMARY:${icsEscape(summary)}`,
+            `DESCRIPTION:${icsEscape(description)}`,
+            'STATUS:CONFIRMED',
+            'TRANSP:TRANSPARENT',
+            // Local calendar notification only. No email alarm / attendee / MAILTO is emitted.
+            'BEGIN:VALARM',
+            'ACTION:DISPLAY',
+            'TRIGGER:PT0M',
+            `DESCRIPTION:${icsEscape(`နာဒီကာပြောင်းချိန် — ${period} ${i+1}။ ${names[i]}`)}`,
+            'END:VALARM',
+            'END:VEVENT'
+          );
+          eventCount++;
+        }
+      }
+    }
+    lines.push('END:VCALENDAR');
+    const ics=lines.map(foldICSLine).join('\r\n')+'\r\n';
+    const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const y=start.getFullYear(),m=String(start.getMonth()+1).padStart(2,'0'),dd=String(start.getDate()).padStart(2,'0');
+    a.href=url; a.download=`nadika-week-${y}-${m}-${dd}.ics`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    calendarExportNote.textContent=`Calendar ဖိုင် ထုတ်ပြီးပါပြီ • နာဒီကာပြောင်းချိန် ${eventCount} ခု • Calendar notification သာ • ${modeV==='solar'?'နေထွက် နေဝင်တွက်ချက်မှု':'မနက် ၆ ည ၆ တွက်ချက်မှု'}`;
+  }catch(err){
+    calendarExportNote.textContent='Calendar ထုတ်မရပါ — '+(err?.message||err);
+  }
+}
+
+let userCoords=null;
+function rad(d){return d*Math.PI/180} function deg(r){return r*180/Math.PI}
+function norm360(x){x%=360;return x<0?x+360:x}
+function dayOfYear(d){const s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000)}
+function solarUTC(date,lat,lon,isRise){
+  const N=dayOfYear(date), lngHour=lon/15, t=N+(((isRise?6:18)-lngHour)/24);
+  const M=(0.9856*t)-3.289;
+  let L=M+1.916*Math.sin(rad(M))+0.020*Math.sin(rad(2*M))+282.634; L=norm360(L);
+  let RA=deg(Math.atan(0.91764*Math.tan(rad(L)))); RA=norm360(RA);
+  const Lq=Math.floor(L/90)*90, RAq=Math.floor(RA/90)*90; RA=(RA+(Lq-RAq))/15;
+  const sinDec=0.39782*Math.sin(rad(L)), cosDec=Math.cos(Math.asin(sinDec));
+  const cosH=(Math.cos(rad(90.833))-(sinDec*Math.sin(rad(lat))))/(cosDec*Math.cos(rad(lat)));
+  if(cosH>1||cosH<-1) return null;
+  let H=isRise ? 360-deg(Math.acos(cosH)) : deg(Math.acos(cosH)); H/=15;
+  const T=H+RA-(0.06571*t)-6.622;
+  let UT=T-lngHour; while(UT<0)UT+=24; while(UT>=24)UT-=24;
+  return UT;
+}
+function minutesLocalFromUTC(decimalUT,date){
+  const tz=-date.getTimezoneOffset()/60;
+  let h=decimalUT+tz; while(h<0)h+=24; while(h>=24)h-=24;
+  return Math.round(h*60)%1440;
+}
+function minToHM(m){m=(m+1440)%1440;return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`}
+function updateSolarTimesForDate(date){
+  if(!userCoords)return;
+  const ru=solarUTC(date,userCoords.lat,userCoords.lon,true), su=solarUTC(date,userCoords.lat,userCoords.lon,false);
+  if(ru==null||su==null){locationStatus.textContent='ဤနေရာ/ရက်အတွက် နေထွက်၊ နေဝင်ချိန် မတွက်နိုင်ပါ။';return}
+  const sr=minutesLocalFromUTC(ru,date), ss=minutesLocalFromUTC(su,date);
+  sunrise.value=minToHM(sr); sunset.value=minToHM(ss);
+  locationStatus.textContent=`Location အသုံးပြုထားသည် • နေထွက် ${sunrise.value} • နေဝင် ${sunset.value}`;
+}
+function requestLocation(){
+  if(!navigator.geolocation){locationStatus.textContent='ဤ browser/app တွင် Location API မထောက်ပံ့ပါ။ Manual အချိန်ကို အသုံးပြုပါ။';return}
+  locationStatus.textContent='Location ခွင့်ပြုချက် တောင်းနေသည်…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    userCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};
+    const d=new Date(dt.value||Date.now());updateSolarTimesForDate(d);renderClock();renderDaily();renderWeek();
+  },err=>{
+    const m={1:'Location permission ကို ပိတ်ထားသည်။ ခွင့်ပြုပြီး ပြန်စမ်းနိုင်ပါသည်။',2:'Location ကို ရှာမတွေ့ပါ။ Manual နေထွက်/နေဝင်ချိန်ကို အသုံးပြုပါ။',3:'Location ရယူချိန် ကုန်သွားသည်။ ပြန်စမ်းနိုင်ပါသည်။'};
+    locationStatus.textContent=m[err.code]||'Location မရပါ။ Manual အချိန်ကို အသုံးပြုပါ။';
+  },{enableHighAccuracy:false,timeout:12000,maximumAge:3600000});
+}
+function localVal(d){let z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,16)}let now=new Date();dt.value=localVal(now);dailyDate.value=localVal(now).slice(0,10);weekStart.value=dailyDate.value;
+[mode,sunrise,sunset].forEach(x=>x.addEventListener('input',renderClock));dt.addEventListener('input',()=>{if(userCoords)updateSolarTimesForDate(new Date(dt.value));renderClock()});[dailyDate,dailyMode,sunrise,sunset].forEach(x=>x.addEventListener('input',renderDaily));weekStart.addEventListener('input',()=>{updateWeekDayOptions();renderWeek()});weekDaySelect.addEventListener('input',renderWeek);weekMode.addEventListener('input',renderWeek);document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');if(b.dataset.page==='daily')renderDaily();if(b.dataset.page==='week')renderWeek()});
+locBtn.addEventListener('click',requestLocation);exportWeekCalendar.addEventListener('click',exportWeeklyCalendar);window.addEventListener('resize',renderClock);setInterval(()=>{const n=new Date();renderAnalogHands(n);if(Math.abs(new Date(dt.value)-n)<120000){dt.value=localVal(n);if(userCoords&&mode.value==='solar')updateSolarTimesForDate(n);renderClock()}},1000);updateWeekDayOptions();renderAnalogHands(now);renderClock();renderDaily();renderWeek();requestLocation();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    if(!('serviceWorker' in navigator)) return;
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+      await reg.update();
+    }catch(e){}
+  });
+}
+</script>
+</body></html>
